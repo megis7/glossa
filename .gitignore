@@ -1,0 +1,9 @@
+.vscode/*
+
+interpreter/scripts/*
+interpreter/objs/*
+
+interpreter/*.tab.*
+interpreter/*.yy.*
+
+interpreter/interp

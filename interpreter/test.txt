@@ -1,0 +1,37 @@
+! This is a general test for our language
+! Over time we will change the syntax to look more like the target language (Γλώσσα) 
+
+declare integer x;
+declare boolean b;
+declare real y;
+
+b = false;
+
+1 + 4.0;            ! this line produces error
+2 / 3.0;            ! this line produces error
+2.0 * 3;            ! this line produces error
+
+if false then 
+    x = 1 + 4;
+elseif false then
+    x = 1 + 5;
+elseif false then
+    x = 14;
+else
+    if b then 
+        x = 15;
+    else
+        x = 16;
+    endif
+endif
+
+b = true;
+
+while b repeat
+    3 + 4;
+    if b then b = false; endif
+endwhile
+
+y = (1 + x) / 5;
+
+177;

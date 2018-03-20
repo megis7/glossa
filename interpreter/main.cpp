@@ -1,0 +1,33 @@
+#include <iostream>
+
+#include "types.h"
+#include "Scope.h"
+#include "AstNode.h"
+#include "Result.h"
+
+using namespace std;
+
+AstNode* root;			// root of the syntax tree
+
+int yyparse();
+
+int main (void) 
+{
+	// setup the local scope of variables
+	Scope local;
+	Scope::SetCurrentScope(local);
+	
+	// parse the program
+	yyparse ();
+
+	// evaluate the syntax tree
+	root->Evaluate();
+
+	// Debug print all created variables
+	cout << "----------------------------" << endl << "Scope: " << endl;
+	Scope::GetCurrentScope().PrintAllVariables();
+
+	return 0;	
+}
+
+extern "C" void yyerror (char *s) {fprintf (stderr, "%s\n", s);} 
