@@ -34,11 +34,11 @@ extern AstNode* root;
 %token <val> REAL
 %token <val> IDENTIFIER
 
-%token DECLARE REAL_DECL INTEGER_DECL BOOL_DECL
+%token DECLARE REAL_DECL INTEGER_DECL BOOL_DECL LESS
 %token IF THEN ELSEIF ELSE ENDIF
 %token WHILE REPEAT ENDWHILE
 
-%type <val> number multipl statement statements assignment declaration elseifs while
+%type <val> number multipl statement statements assignment declaration elseifs while comparison
 
 %%
 
@@ -73,8 +73,12 @@ declaration:  DECLARE INTEGER_DECL IDENTIFIER ';' 			{ $<val.node>$ = new Declar
 			| DECLARE REAL_DECL IDENTIFIER ';' 				{ $<val.node>$ = new DeclarationNode($<val.sval>3, new Real(0)); }
 			;
 
-expression:   addition						{$<val.node>$ = $<val.node>1;}
-			| assignment					{$<val.node>$ = $<val.node>1;}
+num_expr:     addition						{$<val.node>$ = $<val.node>1;}
+			;
+
+expression:   assignment					{$<val.node>$ = $<val.node>1;}
+			| comparison					{$<val.node>$ = $<val.node>1;}
+			| num_expr						{$<val.node>$ = $<val.node>1;}			
 			;
 
 multipl: 	  multipl '*' number			{$<val.node>$ = new MultiplicationNode($<val.node>1, $<val.node>3);}
@@ -86,14 +90,17 @@ addition: 	  addition '+' multipl			{$<val.node>$ = new AdditionNode($<val.node>
 			| multipl						{$<val.node>$ = $<val.node>1;}
 			;
 
+comparison:   num_expr '<' num_expr			{$<val.node>$ = new LessComparisonNode($<val.node>1, $<val.node>3);}
+			;
+
 number:		  INTEGER						{$<val.node>$ = new LiteralNode(new Integer($<val.ival>1));}
 			| REAL							{$<val.node>$ = new LiteralNode(new Real($<val.rval>1));}
 			| BOOLEAN						{$<val.node>$ = new LiteralNode(new Boolean($<val.bval>1));}
 			| IDENTIFIER					{$<val.node>$ = new IdentifierNode($<val.sval>1);}
-			| '(' expression ')'			{$<val.node>$ = $<val.node>2;}
+			| '(' num_expr ')'				{$<val.node>$ = $<val.node>2;}
 			;
 
-assignment:   IDENTIFIER '=' expression 	{$<val.node>$ = new AssignmentNode(new IdentifierNode($<val.sval>1), $<val.node>3);}
+assignment:   IDENTIFIER '=' num_expr	 	{$<val.node>$ = new AssignmentNode(new IdentifierNode($<val.sval>1), $<val.node>3);}
 			;
 
 // primary: 	  number					{$$ = $1;}

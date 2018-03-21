@@ -65,6 +65,15 @@ public:
 
 };
 
+class LessComparisonNode : public BinaryNode
+{
+public:
+	LessComparisonNode() {}
+	LessComparisonNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
+
+	virtual Result* Evaluate();
+};
+
 class LiteralNode : public AstNode
 {
 public:

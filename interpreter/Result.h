@@ -39,17 +39,36 @@ class ValidResult : public Result
 {
 public:
 	virtual bool IsSane() final { return true; }
+};
 
-	virtual Result* operator ==(ValidResult* other) { return nullptr; }
+/* Operations interfaces */
+
+class ComparableResult
+{
+public:
+	virtual Result* operator <(const ValidResult* other) = 0;
+};
+
+class EquitableResult
+{
+public:
 	virtual Result* operator !=(ValidResult* other) { return nullptr; }
+	virtual Result* operator ==(ValidResult* other) { return nullptr; }
+};
+
+class OperableResult
+{
+public:
 	virtual Result* operator +(ValidResult const * other) = 0;
 	virtual Result* operator -(ValidResult* other) { return nullptr; }
 	virtual Result* operator *(ValidResult const* other) = 0;
 	virtual Result* operator /(ValidResult const* other) = 0;
 };
 
+/*--------------------------------------------------------------------------*/
+
 // A concrete realization of a valid result
-class Integer : public ValidResult
+class Integer : public ValidResult, public OperableResult, public ComparableResult, public EquitableResult
 {
 public:
 	Integer() : datum(0) {}
@@ -59,6 +78,7 @@ public:
 
 	virtual Result* operator= (Result * other);	
 
+	virtual Result* operator <(const ValidResult* other);	
 	virtual Result* operator +(ValidResult const * other);
 	virtual Result* operator *(ValidResult const * other);
 	virtual Result* operator /(ValidResult const * other);
@@ -67,7 +87,7 @@ private:
 	int datum;
 };
 
-class Real : public ValidResult
+class Real : public ValidResult, public OperableResult, public ComparableResult, public EquitableResult
 {
 public:
 	Real() : Real(0) {}
@@ -77,6 +97,7 @@ public:
 
 	virtual Result* operator= (Result * other);	
 
+	virtual Result* operator <(const ValidResult* other);	
 	virtual Result* operator +(ValidResult const * other);
 	virtual Result* operator *(ValidResult const * other);
 	virtual Result* operator /(ValidResult const * other);
@@ -87,7 +108,7 @@ private:
 	static double accuracy;
 };
 
-class Boolean : public ValidResult
+class Boolean : public ValidResult, public EquitableResult
 {
 public:
 	Boolean() : Boolean(false) {}
@@ -97,10 +118,6 @@ public:
 
 	virtual Result* operator= (Result * other);
 
-	virtual Result* operator +(ValidResult const * other) {return nullptr;}
-	virtual Result* operator *(ValidResult const * other) {return nullptr;}
-	virtual Result* operator /(ValidResult const * other) {return nullptr;}
-
 	bool IsTrue() const { return datum; }
 
 	// Define the two boolean values 'true' and 'false'
@@ -109,6 +126,18 @@ public:
 
 private:
 	bool datum;
+};
+
+class Void : public ValidResult
+{
+public:
+	virtual Result* operator +(ValidResult const * other) {return nullptr;}
+	virtual Result* operator *(ValidResult const * other) {return nullptr;}
+	virtual Result* operator /(ValidResult const * other) {return nullptr;}
+
+	virtual void Print(std::ostream& stream) const { stream << "void"; }
+
+	virtual Result* operator= (Result * other){}
 };
 
 #endif

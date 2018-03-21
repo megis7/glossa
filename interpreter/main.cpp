@@ -21,7 +21,12 @@ int main (void)
 	yyparse ();
 
 	// evaluate the syntax tree
-	root->Evaluate();
+	Result* r = root->Evaluate();
+
+	if(r->IsSane() == false)
+		std::cout << "An error has occured: " << *r << std::endl;
+	else
+		std::cout << "Exited successfully" << std::endl;
 
 	// Debug print all created variables
 	cout << "----------------------------" << endl << "Scope: " << endl;
@@ -30,4 +35,4 @@ int main (void)
 	return 0;	
 }
 
-extern "C" void yyerror (char *s) {fprintf (stderr, "%s\n", s);} 
+extern "C" void yyerror (char *s) {fprintf (stderr, "%s\n", s);}

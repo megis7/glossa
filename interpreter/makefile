@@ -6,7 +6,8 @@ all: y.tab.c lex.yy.c
 	g++ -c Result.cpp -o objs/Result.o -std=c++11
 	g++ -c Scope.cpp -o objs/Scope.o -std=c++11
 
-	#bison -r state -d interp.y# output file with grammar confilcts
+	# output file which contains grammar confilcts
+	# bison -r state -d interp.y
 
 	g++ objs/main.o objs/lex.yy.o objs/y.tab.o objs/AstNode.o objs/Result.o objs/Scope.o -o interp -std=c++11
 

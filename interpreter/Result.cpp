@@ -62,6 +62,17 @@ Result * Integer::operator= (Result * other)
 	return this;
 }
 
+Result* Integer::operator<(const ValidResult* other)
+{
+	const Integer* _other = dynamic_cast<Integer const *>(other);
+
+	if(_other == nullptr)
+		return new ErrorResult("Could not convert ValidResult object to Integer");
+
+	return new Boolean(datum < _other->datum);
+}
+
+
 void Integer::Print(std::ostream & stream) const
 {
 	stream << datum;
@@ -126,6 +137,16 @@ Result* Real::operator= (Result * other)
 	datum = _other->datum;
 	return this;
 }
+
+Result* Real::operator <(const ValidResult* other)
+{
+	const Real* _other = dynamic_cast<Real const *>(other);
+
+	if(_other == nullptr)
+		return new ErrorResult("Could not convert ValidResult object to Integer");
+
+	return new Boolean(datum < _other->datum);
+}	
 
 /********************************************************************************************/
 
