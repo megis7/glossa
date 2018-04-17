@@ -4,8 +4,9 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <functional>
 
-#include "Result.h"
+#include "Result.hpp"
 
 class AstNode
 {
@@ -102,11 +103,7 @@ private:
 	std::string name;				// identifier name
 };
 
-class StatementsNode : public AstNode
-{
-public:
-	virtual Result* Evaluate();	
-};
+
 
 class AssignmentNode : public BinaryNode
 {
@@ -114,25 +111,6 @@ public:
 	AssignmentNode() {}
 	AssignmentNode(AstNode* identifierNode, AstNode* expression) : BinaryNode(identifierNode, expression) {}
 
-	virtual Result* Evaluate();
-};
-
-class ConditionalStatements : public AstNode
-{
-public:
-	ConditionalStatements() : condition(nullptr), statements(nullptr) {}
-	ConditionalStatements(AstNode* _condition, AstNode* _statements) : condition(_condition) {statements = dynamic_cast<StatementsNode*>(_statements);}
-	ConditionalStatements(AstNode* _statements) : condition(new LiteralNode(&Boolean::BooleanTrue)) {statements = dynamic_cast<StatementsNode*>(_statements);}
-	virtual Result* Evaluate();
-
-private:
-	AstNode* condition;
-	StatementsNode* statements;
-};
-
-class ConditionalStructure : public AstNode
-{
-public:
 	virtual Result* Evaluate();
 };
 
@@ -148,10 +126,7 @@ private:
 	ValidResult* identifierObject; 
 };
 
-class IterativeStructure : public AstNode
-{
-public:
-	virtual Result* Evaluate();
-};
+
+
 
 #endif

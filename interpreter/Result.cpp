@@ -1,5 +1,5 @@
-#include "Result.h"
-#include <typeinfo>
+#include "Result.hpp"
+#include <string>
 
 double Real::accuracy = 0.0001;
 Boolean Boolean::BooleanTrue = Boolean(true);
@@ -7,7 +7,7 @@ Boolean Boolean::BooleanFalse = Boolean(false);
 
 std::ostream & operator<<(std::ostream & str, Result const & data)
 {
-	data.Print(str);
+	str << data.ToString();
 	return str;
 }
 
@@ -73,16 +73,16 @@ Result* Integer::operator<(const ValidResult* other)
 }
 
 
-void Integer::Print(std::ostream & stream) const
+std::string Integer::ToString() const
 {
-	stream << datum;
+	return std::to_string(datum);
 }
 
 /********************************************************************************************/
 
-void Real::Print(std::ostream & stream) const
+std::string Real::ToString() const
 {
-	stream << datum;
+	return std::to_string(datum);
 }
 
 Result * Real::operator+(ValidResult const * other)
@@ -150,9 +150,9 @@ Result* Real::operator <(const ValidResult* other)
 
 /********************************************************************************************/
 
-void Boolean::Print(std::ostream& stream) const
+std::string Boolean::ToString() const
 {
-	stream << (datum ? "true" : "false");
+	return (datum ? "true" : "false");
 }
 
 Result * Boolean::operator=(Result * other)
@@ -178,7 +178,7 @@ Result* ErrorResult::operator= (Result * other)
 	return this;
 }
 
-void ErrorResult::Print(std::ostream& stream) const
+std::string ErrorResult::ToString() const
 {
-	stream << message << std::endl;
+	return message;
 }	

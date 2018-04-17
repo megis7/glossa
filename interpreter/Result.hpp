@@ -8,9 +8,9 @@ class Result
 {
 public:
 	virtual bool IsSane() = 0;
-	virtual void Print(std::ostream& stream) const = 0;
+	virtual std::string ToString() const = 0;
 
-	virtual Result* operator= (Result * other) = 0;
+	virtual Result* operator= (Result * other) = 0;	
 	
 	friend std::ostream& operator<<(std::ostream& str, Result const& data);
 };
@@ -23,9 +23,9 @@ public:
 	ErrorResult(std::string _message) : message(_message), handled(false) {}
 
 	virtual bool IsSane() final { return false; }
+	virtual std::string ToString() const;	
 
-	virtual Result* operator= (Result * other);
-	virtual void Print(std::ostream& stream) const;		
+	virtual Result* operator= (Result * other);		
 
 	bool IsHandled() { return handled; }
 	void Handle() { handled = true; }
@@ -43,20 +43,23 @@ public:
 
 /* Operations interfaces */
 
-class ComparableResult
+class Comparable
 {
 public:
 	virtual Result* operator <(const ValidResult* other) = 0;
+	virtual Result* operator <=(const ValidResult* other) {return nullptr;}
+	virtual Result* operator >(const ValidResult* other) {return nullptr;}
+	virtual Result* operator >=(const ValidResult* other) {return nullptr;}
 };
 
-class EquitableResult
+class Equitable
 {
 public:
 	virtual Result* operator !=(ValidResult* other) { return nullptr; }
 	virtual Result* operator ==(ValidResult* other) { return nullptr; }
 };
 
-class OperableResult
+class Operable
 {
 public:
 	virtual Result* operator +(ValidResult const * other) = 0;
@@ -68,13 +71,13 @@ public:
 /*--------------------------------------------------------------------------*/
 
 // A concrete realization of a valid result
-class Integer : public ValidResult, public OperableResult, public ComparableResult, public EquitableResult
+class Integer : public ValidResult, public Operable, public Comparable, public Equitable
 {
 public:
 	Integer() : datum(0) {}
 	Integer(int value) : datum(value) {}
 
-	virtual void Print(std::ostream& stream) const;
+	virtual std::string ToString() const;
 
 	virtual Result* operator= (Result * other);	
 
@@ -87,13 +90,13 @@ private:
 	int datum;
 };
 
-class Real : public ValidResult, public OperableResult, public ComparableResult, public EquitableResult
+class Real : public ValidResult, public Operable, public Comparable, public Equitable
 {
 public:
 	Real() : Real(0) {}
 	Real(double value) : datum(value) {}
 
-	virtual void Print(std::ostream& stream) const;
+	virtual std::string ToString() const;
 
 	virtual Result* operator= (Result * other);	
 
@@ -108,13 +111,13 @@ private:
 	static double accuracy;
 };
 
-class Boolean : public ValidResult, public EquitableResult
+class Boolean : public ValidResult, public Equitable
 {
 public:
 	Boolean() : Boolean(false) {}
 	Boolean(bool value) : datum(value) {}
 
-	virtual void Print(std::ostream& stream) const;
+	virtual std::string ToString() const;
 
 	virtual Result* operator= (Result * other);
 
@@ -131,11 +134,7 @@ private:
 class Void : public ValidResult
 {
 public:
-	virtual Result* operator +(ValidResult const * other) {return nullptr;}
-	virtual Result* operator *(ValidResult const * other) {return nullptr;}
-	virtual Result* operator /(ValidResult const * other) {return nullptr;}
-
-	virtual void Print(std::ostream& stream) const { stream << "void"; }
+	virtual std::string ToString() const { return "void"; }
 
 	virtual Result* operator= (Result * other){}
 };

@@ -6,10 +6,12 @@ int yylex();
 #include "types.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <functional>
 
 #include <iostream>
 
-#include "AstNode.h"
+#include "AstNode.hpp"
+#include "Structures.hpp"
 
 extern AstNode* root;
 
@@ -29,7 +31,7 @@ extern AstNode* root;
 	} val;
 }
 
-%token <val> INTEGER			// names with capital are defined by me as i want
+%token <val> INTEGER
 %token <val> BOOLEAN
 %token <val> REAL
 %token <val> IDENTIFIER
@@ -58,7 +60,7 @@ elseifs: 	  ELSEIF expression THEN statements				{ $<val.node>$ = new Conditiona
 while:		  WHILE expression REPEAT statements ENDWHILE 	{ $<val.node>$ = new IterativeStructure(); $<val.node>$->AddChild($<val.node>2); $<val.node>$->AddChild($<val.node>4); }
 			;
 
-statements:   %empty										{ $<val.node>$ = new StatementsNode(); }
+statements:   %empty										{ $<val.node>$ = new SuccessionStructure(); }
 			| statements statement							{ $<val.node>$->AddChild($<val.node>2); }
 			;			
 

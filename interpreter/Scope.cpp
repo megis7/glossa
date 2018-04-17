@@ -1,4 +1,4 @@
-#include "Scope.h"
+#include "Scope.hpp"
 #include <iostream>
 
 // declare the static class variable

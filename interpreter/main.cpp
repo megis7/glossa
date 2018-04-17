@@ -1,9 +1,10 @@
 #include <iostream>
 
 #include "types.h"
-#include "Scope.h"
-#include "AstNode.h"
-#include "Result.h"
+#include "Scope.hpp"
+#include "AstNode.hpp"
+#include "Result.hpp"
+#include "Structures.hpp"
 
 using namespace std;
 

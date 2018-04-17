@@ -1,7 +1,7 @@
 %{
 
 #include "types.h"
-#include "AstNode.h"
+#include "AstNode.hpp"
 #include "y.tab.h"
 extern "C" void yyerror(char* str);
 
@@ -34,7 +34,7 @@ extern "C" void yyerror(char* str);
 ([0-9]+[.][0-9]+)       {yylval.val.type = MY_REAL; yylval.val.rval = atof(yytext); return REAL;}
 
 [ \t\n]                 ;                                
-[-+=*/!()<;]             {return yytext[0];}
+[-+=*/!()<;]            {return yytext[0];}
 .                       {ECHO; yyerror ("unexpected character");}
 
 %%

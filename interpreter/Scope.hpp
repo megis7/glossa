@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 
-#include "Result.h"
+#include "Result.hpp"
 
 // Defines a variable collection that is grouped into the scope
 class Scope
