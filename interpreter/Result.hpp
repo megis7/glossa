@@ -1,6 +1,7 @@
 #ifndef RESULT_H
 #define RESULT_H
 
+#include "types.h"
 #include <ostream>
 
 // Abstract class that represents the result of a Node operation
@@ -9,6 +10,7 @@ class Result
 public:
 	virtual bool IsSane() = 0;
 	virtual std::string ToString() const = 0;
+	virtual Type MyType() const = 0;
 
 	virtual Result* operator= (Result * other) = 0;	
 	
@@ -24,6 +26,7 @@ public:
 
 	virtual bool IsSane() final { return false; }
 	virtual std::string ToString() const;	
+	virtual Type MyType() const { return ERROR_TYPE; }
 
 	virtual Result* operator= (Result * other);		
 
@@ -78,6 +81,7 @@ public:
 	Integer(int value) : datum(value) {}
 
 	virtual std::string ToString() const;
+	virtual Type MyType() const { return INTEGER_TYPE; }	
 
 	virtual Result* operator= (Result * other);	
 
@@ -95,6 +99,7 @@ class Real : public ValidResult, public Operable, public Comparable, public Equi
 public:
 	Real() : Real(0) {}
 	Real(double value) : datum(value) {}
+	virtual Type MyType() const { return REAL_TYPE; }
 
 	virtual std::string ToString() const;
 
@@ -118,6 +123,7 @@ public:
 	Boolean(bool value) : datum(value) {}
 
 	virtual std::string ToString() const;
+	virtual Type MyType() const { return BOOLEAN_TYPE; }	
 
 	virtual Result* operator= (Result * other);
 
@@ -135,6 +141,7 @@ class Void : public ValidResult
 {
 public:
 	virtual std::string ToString() const { return "void"; }
+	virtual Type MyType() const { return VOID_TYPE; }	
 
 	virtual Result* operator= (Result * other){}
 };

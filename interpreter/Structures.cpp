@@ -1,17 +1,24 @@
 #include "Structures.hpp"
 #include <cassert>
 
+
+
 Result* ConditionalStatements::Evaluate()
 {
 	Result* cond = condition->Evaluate();
 
 	if(cond->IsSane() == false)		// Error when evaluating the condition
-		return cond;				// return the cond which contains the actual error
+		return cond;				// return the cond which is of type ErrorResult and contains the actual error
 
-	Boolean* cond_bool = dynamic_cast<Boolean*>(cond);
+	Boolean* cond_bool;
 
-	if(cond_bool == nullptr)		// returned condition was of a non-boolean type
+	if(TryConvert(cond, cond_bool) == false)
 		return new ErrorResult("Could not convert ValidResult to Boolean for conditional");
+
+	// Boolean* cond_bool = dynamic_cast<Boolean*>(cond);
+
+	// if(cond_bool == nullptr)		// returned condition was of a non-boolean type
+	// 	return new ErrorResult("Could not convert ValidResult to Boolean for conditional");
 
 	if(cond_bool->IsTrue())
 	{

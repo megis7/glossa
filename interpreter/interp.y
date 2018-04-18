@@ -19,7 +19,7 @@ extern AstNode* root;
 
 %union {	
 	struct {
-		Types type;		// these are semantics
+		// Type type;		// these are semantics
 		union
 		{
 			int ival;

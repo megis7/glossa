@@ -25,13 +25,13 @@ extern "C" void yyerror(char* str);
 "repeat"                {return REPEAT;}
 "endwhile"              {return ENDWHILE;}
 
-"true"                  {yylval.val.type = MY_BOOLEAN; yylval.val.bval = 1; return BOOLEAN;}
-"false"                 {yylval.val.type = MY_BOOLEAN; yylval.val.bval = 0; return BOOLEAN;}
+"true"                  {yylval.val.bval = 1; return BOOLEAN;}
+"false"                 {yylval.val.bval = 0; return BOOLEAN;}
 
 [a-zA-Z]+			    {yylval.val.sval = strcpy(new char[strlen(yytext)], yytext); return IDENTIFIER;}
 
-[0-9]+                  {yylval.val.type = MY_INTEGER; yylval.val.ival = atoi(yytext); return INTEGER;}
-([0-9]+[.][0-9]+)       {yylval.val.type = MY_REAL; yylval.val.rval = atof(yytext); return REAL;}
+[0-9]+                  {yylval.val.ival = atoi(yytext); return INTEGER;}
+([0-9]+[.][0-9]+)       {yylval.val.rval = atof(yytext); return REAL;}
 
 [ \t\n]                 ;                                
 [-+=*/!()<;]            {return yytext[0];}

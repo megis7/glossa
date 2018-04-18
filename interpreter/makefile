@@ -18,7 +18,7 @@ run: all
 lex.yy.c: y.tab.c interp.l
 	lex interp.l
 	mkdir -p objs	
-	g++ -c lex.yy.c -o objs/lex.yy.o -std=c++11 -Wwrite-strings
+	g++ -c lex.yy.c -o objs/lex.yy.o -std=c++11
 
 y.tab.c: interp.y
 	yacc -d interp.y

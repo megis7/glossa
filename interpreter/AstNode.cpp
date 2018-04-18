@@ -56,11 +56,6 @@ Result* AdditionNode::Evaluate()
 	if(operands.second->IsSane() == false)
 		return AstNode::HandleError(static_cast<ErrorResult*>(operands.second));
 
-	// Here we have a valid result token which defines the arithmetic and logical operators
-
-	// ValidResult* token_l = static_cast<ValidResult*>(operands.first);
-	// ValidResult* token_r = static_cast<ValidResult*>(operands.second);
-
 	Operable* token_l = dynamic_cast<Operable*>(operands.first);
 	ValidResult* token_r = static_cast<ValidResult*>(operands.second);
 
@@ -83,11 +78,6 @@ Result * MultiplicationNode::Evaluate()
 
 	if(operands.second->IsSane() == false)
 		return AstNode::HandleError(static_cast<ErrorResult*>(operands.second));
-
-	// Here we have a valid result token which defines the arithmetic and logical operators
-
-	// ValidResult* token_l = static_cast<ValidResult*>(operands.first);
-	// ValidResult* token_r = static_cast<ValidResult*>(operands.second);
 
 	Operable* token_l = dynamic_cast<Operable*>(operands.first);
 	ValidResult* token_r = static_cast<ValidResult*>(operands.second);
@@ -113,11 +103,6 @@ Result * DivisionNode::Evaluate()
 	if(operands.second->IsSane() == false)
 		return AstNode::HandleError(static_cast<ErrorResult*>(operands.second));
 
-	// Here we have a valid result token which defines the arithmetic and logical operators
-
-	// ValidResult* token_l = static_cast<ValidResult*>(operands.first);
-	// ValidResult* token_r = static_cast<ValidResult*>(operands.second);
-
 	Operable* token_l = dynamic_cast<Operable*>(operands.first);
 	ValidResult* token_r = static_cast<ValidResult*>(operands.second);
 
@@ -135,9 +120,6 @@ Result* LessComparisonNode::Evaluate()
 
 	if(operands.second->IsSane() == false)
 		return AstNode::HandleError(static_cast<ErrorResult*>(operands.second));
-
-	// ValidResult* token_l = static_cast<ValidResult*>(operands.first);
-	// ValidResult* token_r = static_cast<ValidResult*>(operands.second);
 
 	Comparable* token_l = dynamic_cast<Comparable*>(operands.first);
 	ValidResult* token_r = static_cast<ValidResult*>(operands.second);
