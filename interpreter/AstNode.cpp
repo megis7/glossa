@@ -1,6 +1,6 @@
 #include "AstNode.hpp"
 #include "Scope.hpp"
-
+#include "Structures.hpp"
 #include <cassert>
 
 void AstNode::AddChild(AstNode* child)
@@ -56,7 +56,10 @@ Result* AdditionNode::Evaluate()
 	if(operands.second->IsSane() == false)
 		return AstNode::HandleError(static_cast<ErrorResult*>(operands.second));
 
-	Operable* token_l = dynamic_cast<Operable*>(operands.first);
+	Operable* token_l;
+	if(TryConvert(operands.first, token_l) == false)
+		return new ErrorResult("Operand is not of operable type");
+
 	ValidResult* token_r = static_cast<ValidResult*>(operands.second);
 
 	Result* result = token_l->operator+(token_r);
@@ -124,7 +127,7 @@ Result* LessComparisonNode::Evaluate()
 	Comparable* token_l = dynamic_cast<Comparable*>(operands.first);
 	ValidResult* token_r = static_cast<ValidResult*>(operands.second);
 
-	return token_l->operator<(token_r);
+	return token_l->operator<(token_r); 
 }
 
 Result* AssignmentNode::Evaluate()

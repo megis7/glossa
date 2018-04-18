@@ -14,6 +14,8 @@ int yyparse();
 
 int main (void) 
 {
+	auto b = new Boolean(true);		// TODO: if i remove this then all booleans evaluate to false ??? DEBUG
+
 	// setup the local scope of variables
 	Scope local;
 	Scope::SetCurrentScope(local);

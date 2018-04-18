@@ -4,13 +4,6 @@
 #include "AstNode.hpp"
 #include "Result.hpp"
 
-template <class T>
-bool TryConvert(Result* x, T* &y)
-{
-	y = dynamic_cast<T*>(x);
-	return y != nullptr; 
-}
-
 class SuccessionStructure : public AstNode
 {
 public:

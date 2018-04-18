@@ -157,13 +157,45 @@ std::string Boolean::ToString() const
 
 Result * Boolean::operator=(Result * other)
 {
-	const Boolean* _other = dynamic_cast<Boolean const *>(other);
+	Boolean* _other;
 
-	if(_other == nullptr)
+	if(TryConvert(other, _other) == false)
 		return new ErrorResult("Could not convert ValidResult object to Boolean");
 	
 	datum = _other->datum;
 	return this;
+}
+
+Result* Boolean::operator &&(ValidResult* other) const
+{
+	const Boolean* _other;
+	if(TryConvert(other, _other) == false)
+		return new ErrorResult("Could not convert ValidResult object to Boolean");
+	
+	if(this->IsTrue() && _other->IsTrue())
+		return &BooleanTrue;
+	
+	return &BooleanFalse;
+}
+
+Result* Boolean::operator ||(ValidResult* other) const
+{
+	const Boolean* _other;
+	if(TryConvert(other, _other) == false)
+		return new ErrorResult("Could not convert ValidResult object to Boolean");
+	
+	if(this->IsTrue() || _other->IsTrue())
+		return &BooleanTrue;
+	
+	return &BooleanFalse;
+}
+
+Result* Boolean::operator !() const
+{
+	if(this->IsTrue())
+		return &BooleanFalse;
+	
+	return &BooleanTrue;
 }
 
 /********************************************************************************************/

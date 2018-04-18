@@ -1,8 +1,6 @@
 #include "Structures.hpp"
 #include <cassert>
 
-
-
 Result* ConditionalStatements::Evaluate()
 {
 	Result* cond = condition->Evaluate();
@@ -14,11 +12,6 @@ Result* ConditionalStatements::Evaluate()
 
 	if(TryConvert(cond, cond_bool) == false)
 		return new ErrorResult("Could not convert ValidResult to Boolean for conditional");
-
-	// Boolean* cond_bool = dynamic_cast<Boolean*>(cond);
-
-	// if(cond_bool == nullptr)		// returned condition was of a non-boolean type
-	// 	return new ErrorResult("Could not convert ValidResult to Boolean for conditional");
 
 	if(cond_bool->IsTrue())
 	{
@@ -33,19 +26,7 @@ Result* SuccessionStructure::Evaluate()
 {	
 	for(auto iter = children.begin(); iter != children.end(); iter++)
 	{
-		if(*iter == nullptr)			// TODO: FIX these errors (these are VOID results but we have not yet such a type)
-		{
-			std::cout << "statements found nullptr" << std::endl;
-			continue;
-		}
-
 		Result* r = (*iter)->Evaluate();
-
-		if(r == nullptr)		// TODO: FIX these errors
-		{
-			std::cout << "statements found nullptr result" << std::endl;
-			continue;
-		}
 
 		if(r->IsSane() == false)
 		{
@@ -73,28 +54,25 @@ Result* ConditionalStructure::Evaluate()
 	return new Void();
 }
 
-
 Result* IterativeStructure::Evaluate()
 {
-	assert(children.size() == 2);
-	assert(children[0] != nullptr && children[1] != nullptr);
+	assert(children.size() == 1);
+	assert(children[0] != nullptr);
 
 	AstNode* condition = children[0];
-	Result* res = condition->Evaluate();
+	AstNode* conditional_stmts = children[0];
 
-	if(res->IsSane() == false)
-		return res;
-
-	Boolean* bool_res = dynamic_cast<Boolean*>(res);
-	if(bool_res == nullptr)
-		return new ErrorResult("Could not convert ValidResult to Boolean for while loop condition");
-
-	while(bool_res->IsTrue())
+	while(true)
 	{
-		AstNode* statements = children[1];
-		statements->Evaluate();
+		Result* res = conditional_stmts->Evaluate();
 
-		bool_res = dynamic_cast<Boolean*>(condition->Evaluate());		// safely(?) re-evaluate the boolean condition 
+		if(res->IsSane() == false)
+			return res;
+
+		Boolean* bool_res = Convert<Boolean>(res);
+		
+		if(bool_res->IsTrue() == false)
+			break;
 	}
 
 	return new Void();

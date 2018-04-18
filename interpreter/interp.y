@@ -57,7 +57,7 @@ elseifs: 	  ELSEIF expression THEN statements				{ $<val.node>$ = new Conditiona
 			| elseifs ELSEIF expression THEN statements		{ $<val.node>$->AddChild(new ConditionalStatements($<val.node>3, $<val.node>5));}
 			;
 
-while:		  WHILE expression REPEAT statements ENDWHILE 	{ $<val.node>$ = new IterativeStructure(); $<val.node>$->AddChild($<val.node>2); $<val.node>$->AddChild($<val.node>4); }
+while:		  WHILE expression REPEAT statements ENDWHILE 	{ $<val.node>$ = new IterativeStructure(); $<val.node>$->AddChild(new ConditionalStatements($<val.node>2, $<val.node>4)); }
 			;
 
 statements:   %empty										{ $<val.node>$ = new SuccessionStructure(); }

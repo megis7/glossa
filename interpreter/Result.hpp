@@ -37,6 +37,16 @@ private:
 	bool handled;
 };
 
+template <class T>
+bool TryConvert(Result* x, T* &y)
+{
+	y = dynamic_cast<T*>(x);
+	return y != nullptr; 
+}
+
+template <class T>
+T* Convert(Result* x){ return dynamic_cast<T*>(x); }
+
 // Abstract class that defines the operations of a valid Node result
 class ValidResult : public Result
 {
@@ -55,6 +65,14 @@ public:
 	virtual Result* operator >=(const ValidResult* other) {return nullptr;}
 };
 
+class LComparable
+{
+public:
+	virtual Result* operator &&(ValidResult* other) const = 0;
+	virtual Result* operator ||(ValidResult* other) const = 0;
+	virtual Result* operator !() const = 0;
+};
+
 class Equitable
 {
 public:
@@ -70,7 +88,6 @@ public:
 	virtual Result* operator *(ValidResult const* other) = 0;
 	virtual Result* operator /(ValidResult const* other) = 0;
 };
-
 /*--------------------------------------------------------------------------*/
 
 // A concrete realization of a valid result
@@ -116,7 +133,7 @@ private:
 	static double accuracy;
 };
 
-class Boolean : public ValidResult, public Equitable
+class Boolean : public ValidResult, public Equitable, public LComparable
 {
 public:
 	Boolean() : Boolean(false) {}
@@ -129,11 +146,17 @@ public:
 
 	bool IsTrue() const { return datum; }
 
+	// LComparable implementation
+	// These operations are short-circuited, but this happens after validating that "other" is of Boolean type
+	virtual Result* operator &&(ValidResult* other) const;
+	virtual Result* operator ||(ValidResult* other) const;
+	virtual Result* operator !() const;
+
 	// Define the two boolean values 'true' and 'false'
 	static Boolean BooleanTrue;
 	static Boolean BooleanFalse;
 
-private:
+public:
 	bool datum;
 };
 
