@@ -9,6 +9,8 @@ declare real y;
 
 b = false;
 
+b + 1;              ! this line produces error
+
 1 + 4.0;            ! this line produces error
 2 / 3.0;            ! this line produces error
 2.0 * 3;            ! this line produces error
@@ -36,4 +38,4 @@ endwhile
 
 y = (1 + x) / 5;
 
-177;
+177 + 1;

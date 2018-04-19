@@ -5,8 +5,11 @@
 #include <vector>
 #include <string>
 #include <functional>
+#include <cassert>
 
 #include "Result.hpp"
+
+
 
 class AstNode
 {
@@ -34,6 +37,38 @@ protected:
 	BinaryNode(AstNode* lhs, AstNode* rhs) { AddChild(lhs); AddChild(rhs); } 
 
 	std::pair<Result*, Result*> GetBinaryOperands();
+
+	// Extracts binary operands from the 'children' array and applies the given operator by calling the 'BinaryOperation' function
+	template<typename iType, typename P> Result* Apply(Result* (iType::*operation) (P) )
+	{
+		assert(children.size() == 2);		// Assert binary node has valid children count
+
+		Result *lhs, *rhs;
+
+		if ((lhs = children[0]->Evaluate())->IsSane() == false)
+			return AstNode::HandleError(Convert<ErrorResult>(lhs));
+
+		if((rhs = children[1]->Evaluate())->IsSane() == false)
+			return AstNode::HandleError(Convert<ErrorResult>(rhs));
+
+		iType* token_l;
+		if(TryConvert<iType>(lhs, token_l) == false)
+			return new ErrorResult("Operand " + lhs->MyTypeString() + " is not of " + iType::ToString() + " type");
+
+		ValidResult* token_r = (ValidResult*)(rhs);
+
+		Result* result = BinaryOperation(operation, token_l, token_r);
+
+		return result;
+	}
+
+private:
+	// Applies the given operator over the given operands by using polymorphism on the left-hand-side operand 
+	template<typename opType, typename X, typename Y>
+	static Result* BinaryOperation(opType op, X lhs, Y rhs)
+	{
+		return (lhs->*op)(rhs);
+	}
 };
 
 class AdditionNode : public BinaryNode

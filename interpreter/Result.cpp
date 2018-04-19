@@ -62,9 +62,9 @@ Result * Integer::operator= (Result * other)
 	return this;
 }
 
-Result* Integer::operator<(const ValidResult* other)
+Result* Integer::operator<(ValidResult* other)
 {
-	const Integer* _other = dynamic_cast<Integer const *>(other);
+	Integer* _other = dynamic_cast<Integer *>(other);
 
 	if(_other == nullptr)
 		return new ErrorResult("Could not convert ValidResult object to Integer");
@@ -138,9 +138,9 @@ Result* Real::operator= (Result * other)
 	return this;
 }
 
-Result* Real::operator <(const ValidResult* other)
+Result* Real::operator <(ValidResult* other)
 {
-	const Real* _other = dynamic_cast<Real const *>(other);
+	Real* _other = dynamic_cast<Real *>(other);
 
 	if(_other == nullptr)
 		return new ErrorResult("Could not convert ValidResult object to Integer");

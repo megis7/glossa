@@ -2,6 +2,7 @@
 #include "Scope.hpp"
 #include "Structures.hpp"
 #include <cassert>
+#include <functional>
 
 void AstNode::AddChild(AstNode* child)
 {
@@ -35,6 +36,7 @@ AstNode::~AstNode()
 		delete *iter;
 }
 
+// TODO: Delete this function
 std::pair<Result*, Result*> BinaryNode::GetBinaryOperands()
 {
 	assert(children.size() == 2);
@@ -48,23 +50,7 @@ std::pair<Result*, Result*> BinaryNode::GetBinaryOperands()
 
 Result* AdditionNode::Evaluate()
 {	
-	std::pair<Result*, Result*> operands = BinaryNode::GetBinaryOperands();
-
-	if (operands.first->IsSane() == false)
-		return AstNode::HandleError(static_cast<ErrorResult*>(operands.first));
-
-	if(operands.second->IsSane() == false)
-		return AstNode::HandleError(static_cast<ErrorResult*>(operands.second));
-
-	Operable* token_l;
-	if(TryConvert(operands.first, token_l) == false)
-		return new ErrorResult("Operand is not of operable type");
-
-	ValidResult* token_r = static_cast<ValidResult*>(operands.second);
-
-	Result* result = token_l->operator+(token_r);
-
-	return result;
+	return BinaryNode::Apply(&Operable::operator+);
 }
 
 Result* LiteralNode::Evaluate()
@@ -74,20 +60,7 @@ Result* LiteralNode::Evaluate()
 
 Result * MultiplicationNode::Evaluate()
 {	
-	std::pair<Result*, Result*> operands = BinaryNode::GetBinaryOperands();
-
-	if (operands.first->IsSane() == false)
-		return AstNode::HandleError(static_cast<ErrorResult*>(operands.first));
-
-	if(operands.second->IsSane() == false)
-		return AstNode::HandleError(static_cast<ErrorResult*>(operands.second));
-
-	Operable* token_l = dynamic_cast<Operable*>(operands.first);
-	ValidResult* token_r = static_cast<ValidResult*>(operands.second);
-
-	Result* result = token_l->operator*(token_r);
-
-	return result;
+	return BinaryNode::Apply(&Operable::operator*);	
 }
 
 Result * IdentifierNode::Evaluate()
@@ -98,36 +71,12 @@ Result * IdentifierNode::Evaluate()
 
 Result * DivisionNode::Evaluate()
 {
-	std::pair<Result*, Result*> operands = BinaryNode::GetBinaryOperands();
-
-	if (operands.first->IsSane() == false)
-		return AstNode::HandleError(static_cast<ErrorResult*>(operands.first));
-
-	if(operands.second->IsSane() == false)
-		return AstNode::HandleError(static_cast<ErrorResult*>(operands.second));
-
-	Operable* token_l = dynamic_cast<Operable*>(operands.first);
-	ValidResult* token_r = static_cast<ValidResult*>(operands.second);
-
-	Result* result = token_l->operator/(token_r);
-
-	return result;
+	return BinaryNode::Apply(&Operable::operator/);	
 }
 
 Result* LessComparisonNode::Evaluate()
 {
-	std::pair<Result*, Result*> operands = BinaryNode::GetBinaryOperands();
-
-	if (operands.first->IsSane() == false)
-		return AstNode::HandleError(static_cast<ErrorResult*>(operands.first));
-
-	if(operands.second->IsSane() == false)
-		return AstNode::HandleError(static_cast<ErrorResult*>(operands.second));
-
-	Comparable* token_l = dynamic_cast<Comparable*>(operands.first);
-	ValidResult* token_r = static_cast<ValidResult*>(operands.second);
-
-	return token_l->operator<(token_r); 
+	return BinaryNode::Apply(&Comparable::operator<);	
 }
 
 Result* AssignmentNode::Evaluate()

@@ -4,13 +4,20 @@
 #include "types.h"
 #include <ostream>
 
+class Presentable
+{
+public:
+	virtual std::string ToString() const = 0;
+};
+
 // Abstract class that represents the result of a Node operation
-class Result
+class Result : public Presentable
 {
 public:
 	virtual bool IsSane() = 0;
-	virtual std::string ToString() const = 0;
+
 	virtual Type MyType() const = 0;
+	virtual std::string MyTypeString() const = 0;
 
 	virtual Result* operator= (Result * other) = 0;	
 	
@@ -26,7 +33,9 @@ public:
 
 	virtual bool IsSane() final { return false; }
 	virtual std::string ToString() const;	
+
 	virtual Type MyType() const { return ERROR_TYPE; }
+	virtual std::string MyTypeString() const { return "Error"; }
 
 	virtual Result* operator= (Result * other);		
 
@@ -59,10 +68,13 @@ public:
 class Comparable
 {
 public:
-	virtual Result* operator <(const ValidResult* other) = 0;
+	virtual Result* operator <(ValidResult* other) = 0;
 	virtual Result* operator <=(const ValidResult* other) {return nullptr;}
 	virtual Result* operator >(const ValidResult* other) {return nullptr;}
 	virtual Result* operator >=(const ValidResult* other) {return nullptr;}
+
+	static std::string ToString() { return "Comparable"; }
+	
 };
 
 class LComparable
@@ -71,6 +83,9 @@ public:
 	virtual Result* operator &&(ValidResult* other) const = 0;
 	virtual Result* operator ||(ValidResult* other) const = 0;
 	virtual Result* operator !() const = 0;
+
+	static std::string ToString() { return "LComparable"; }
+	
 };
 
 class Equitable
@@ -78,6 +93,9 @@ class Equitable
 public:
 	virtual Result* operator !=(ValidResult* other) { return nullptr; }
 	virtual Result* operator ==(ValidResult* other) { return nullptr; }
+
+	static std::string ToString() { return "Equitable"; }
+	
 };
 
 class Operable
@@ -87,6 +105,8 @@ public:
 	virtual Result* operator -(ValidResult* other) { return nullptr; }
 	virtual Result* operator *(ValidResult const* other) = 0;
 	virtual Result* operator /(ValidResult const* other) = 0;
+
+	static std::string ToString() { return "Operable"; }
 };
 /*--------------------------------------------------------------------------*/
 
@@ -98,11 +118,13 @@ public:
 	Integer(int value) : datum(value) {}
 
 	virtual std::string ToString() const;
-	virtual Type MyType() const { return INTEGER_TYPE; }	
+
+	virtual Type MyType() const { return INTEGER_TYPE; }
+	virtual std::string MyTypeString() const { return "Integer"; }	
 
 	virtual Result* operator= (Result * other);	
 
-	virtual Result* operator <(const ValidResult* other);	
+	virtual Result* operator <(ValidResult* other);	
 	virtual Result* operator +(ValidResult const * other);
 	virtual Result* operator *(ValidResult const * other);
 	virtual Result* operator /(ValidResult const * other);
@@ -119,10 +141,11 @@ public:
 	virtual Type MyType() const { return REAL_TYPE; }
 
 	virtual std::string ToString() const;
+	virtual std::string MyTypeString() const { return "Real"; }
 
 	virtual Result* operator= (Result * other);	
 
-	virtual Result* operator <(const ValidResult* other);	
+	virtual Result* operator <(ValidResult* other);	
 	virtual Result* operator +(ValidResult const * other);
 	virtual Result* operator *(ValidResult const * other);
 	virtual Result* operator /(ValidResult const * other);
@@ -141,6 +164,7 @@ public:
 
 	virtual std::string ToString() const;
 	virtual Type MyType() const { return BOOLEAN_TYPE; }	
+	virtual std::string MyTypeString() const { return "Boolean"; }
 
 	virtual Result* operator= (Result * other);
 
@@ -165,6 +189,7 @@ class Void : public ValidResult
 public:
 	virtual std::string ToString() const { return "void"; }
 	virtual Type MyType() const { return VOID_TYPE; }	
+	virtual std::string MyTypeString() const { return "Void"; }
 
 	virtual Result* operator= (Result * other){}
 };
