@@ -13,7 +13,7 @@ all: y.tab.c lex.yy.c
 	g++ objs/main.o objs/lex.yy.o objs/y.tab.o objs/AstNode.o objs/Structures.o objs/Result.o objs/Scope.o -o interp -std=c++11
 
 run: all
-	./interp < test.txt
+	./interp < test2.txt
 
 lex.yy.c: y.tab.c interp.l
 	lex interp.l

@@ -25,6 +25,8 @@ extern "C" void yyerror(char* str);
 "repeat"                {return REPEAT;}
 "endwhile"              {return ENDWHILE;}
 
+"not"                   {return BOOL_NEGATE;}
+
 "true"                  {yylval.val.bval = 1; return BOOLEAN;}
 "false"                 {yylval.val.bval = 0; return BOOLEAN;}
 

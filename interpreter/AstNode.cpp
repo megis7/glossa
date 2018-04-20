@@ -53,6 +53,11 @@ Result* AdditionNode::Evaluate()
 	return BinaryNode::Apply(&Operable::operator+);
 }
 
+Result* SubtractionNode::Evaluate()
+{
+	return BinaryNode::Apply(&Operable::operator-);
+}
+
 Result* LiteralNode::Evaluate()
 {	
 	return datum;
@@ -92,6 +97,8 @@ Result* AssignmentNode::Evaluate()
 	operands.first->operator=(operands.second);
 
 	return operands.second;			// TODO: Perhaps the return type of an assignment will be void 
+
+	// return BinaryNode::Apply<Result*, Result>(&Result::operator=);		This doesnt work since the function 'Apply' requires static ToString
 }
 
 Result* DeclarationNode::Evaluate()
@@ -101,4 +108,15 @@ Result* DeclarationNode::Evaluate()
 
 	// success
 	return new Void();
+}
+
+Result* NegationNode::Evaluate()
+{
+	Result* operand = children[0]->Evaluate();
+	Negatable* _operand;
+
+	if(TryConvert(operand, _operand) == false)
+		return new ErrorResult("Operand " + operand->MyTypeString() + " is not of " + Negatable::ToString() + " type");
+
+	return _operand->operator~();
 }

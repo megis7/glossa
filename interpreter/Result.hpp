@@ -46,10 +46,10 @@ private:
 	bool handled;
 };
 
-template <class T>
-bool TryConvert(Result* x, T* &y)
+template <class From, class To>
+bool TryConvert(From* x, To* &y)
 {
-	y = dynamic_cast<T*>(x);
+	y = dynamic_cast<To*>(x);
 	return y != nullptr; 
 }
 
@@ -77,6 +77,14 @@ public:
 	
 };
 
+class Negatable 
+{
+public:
+	virtual Result* operator ~() = 0;
+
+	static std::string ToString() { return "Negatable"; }	
+};
+
 class LComparable
 {
 public:
@@ -101,8 +109,8 @@ public:
 class Operable
 {
 public:
-	virtual Result* operator +(ValidResult const * other) = 0;
-	virtual Result* operator -(ValidResult* other) { return nullptr; }
+	virtual Result* operator +(ValidResult const* other) = 0;
+	virtual Result* operator -(ValidResult const* other) = 0;
 	virtual Result* operator *(ValidResult const* other) = 0;
 	virtual Result* operator /(ValidResult const* other) = 0;
 
@@ -111,7 +119,7 @@ public:
 /*--------------------------------------------------------------------------*/
 
 // A concrete realization of a valid result
-class Integer : public ValidResult, public Operable, public Comparable, public Equitable
+class Integer : public ValidResult, public Operable, public Comparable, public Equitable, public Negatable
 {
 public:
 	Integer() : datum(0) {}
@@ -126,8 +134,11 @@ public:
 
 	virtual Result* operator <(ValidResult* other);	
 	virtual Result* operator +(ValidResult const * other);
+	virtual Result* operator -(ValidResult const * other);
 	virtual Result* operator *(ValidResult const * other);
 	virtual Result* operator /(ValidResult const * other);
+
+	virtual Result* operator ~() { return new Integer(-datum); }
 
 private:
 	int datum;
@@ -147,6 +158,7 @@ public:
 
 	virtual Result* operator <(ValidResult* other);	
 	virtual Result* operator +(ValidResult const * other);
+	virtual Result* operator -(ValidResult const * other);	
 	virtual Result* operator *(ValidResult const * other);
 	virtual Result* operator /(ValidResult const * other);
 
@@ -156,7 +168,7 @@ private:
 	static double accuracy;
 };
 
-class Boolean : public ValidResult, public Equitable, public LComparable
+class Boolean : public ValidResult, public Equitable, public LComparable, public Negatable
 {
 public:
 	Boolean() : Boolean(false) {}
@@ -175,6 +187,8 @@ public:
 	virtual Result* operator &&(ValidResult* other) const;
 	virtual Result* operator ||(ValidResult* other) const;
 	virtual Result* operator !() const;
+
+	virtual Result* operator ~() { return new Boolean(!datum); }
 
 	// Define the two boolean values 'true' and 'false'
 	static Boolean BooleanTrue;

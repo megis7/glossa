@@ -39,6 +39,7 @@ extern AstNode* root;
 %token DECLARE REAL_DECL INTEGER_DECL BOOL_DECL LESS
 %token IF THEN ELSEIF ELSE ENDIF
 %token WHILE REPEAT ENDWHILE
+%token BOOL_NEGATE
 
 %type <val> number multipl statement statements assignment declaration elseifs while comparison
 
@@ -85,11 +86,17 @@ expression:   assignment					{$<val.node>$ = $<val.node>1;}
 
 multipl: 	  multipl '*' number			{$<val.node>$ = new MultiplicationNode($<val.node>1, $<val.node>3);}
 		 	| multipl '/' number			{$<val.node>$ = new DivisionNode($<val.node>1, $<val.node>3);}
- 			| number						{$<val.node>$ = $<val.node>1;}
+ 			| unary							{$<val.node>$ = $<val.node>1;}
  			;	
 
 addition: 	  addition '+' multipl			{$<val.node>$ = new AdditionNode($<val.node>1, $<val.node>3);}
+			| addition '-' multipl			{$<val.node>$ = new SubtractionNode($<val.node>1, $<val.node>3);}
 			| multipl						{$<val.node>$ = $<val.node>1;}
+			;
+
+unary:		  '-' number					{$<val.node>$ = new NegationNode($<val.node>2);}
+			| BOOL_NEGATE boolean			{$<val.node>$ = new NegationNode($<val.node>2);}
+			| number
 			;
 
 comparison:   num_expr '<' num_expr			{$<val.node>$ = new LessComparisonNode($<val.node>1, $<val.node>3);}
@@ -97,9 +104,11 @@ comparison:   num_expr '<' num_expr			{$<val.node>$ = new LessComparisonNode($<v
 
 number:		  INTEGER						{$<val.node>$ = new LiteralNode(new Integer($<val.ival>1));}
 			| REAL							{$<val.node>$ = new LiteralNode(new Real($<val.rval>1));}
-			| BOOLEAN						{$<val.node>$ = new LiteralNode(new Boolean($<val.bval>1));}
 			| IDENTIFIER					{$<val.node>$ = new IdentifierNode($<val.sval>1);}
 			| '(' num_expr ')'				{$<val.node>$ = $<val.node>2;}
+			;
+
+boolean:	  BOOLEAN						{$<val.node>$ = new LiteralNode(new Boolean($<val.bval>1));}
 			;
 
 assignment:   IDENTIFIER '=' num_expr	 	{$<val.node>$ = new AssignmentNode(new IdentifierNode($<val.sval>1), $<val.node>3);}

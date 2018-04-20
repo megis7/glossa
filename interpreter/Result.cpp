@@ -51,6 +51,18 @@ Result * Integer::operator/(ValidResult const * other)
 	return t;
 }
 
+Result* Integer::operator -(ValidResult const * other)
+{
+	const Integer* _other;
+
+	if(TryConvert(other, _other) == false)
+		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to Integer");
+	
+	Integer* t = new Integer(datum - _other->datum);
+
+	return t;
+}
+
 Result * Integer::operator= (Result * other)
 {
 	const Integer* _other = dynamic_cast<Integer const *>(other);
@@ -96,6 +108,18 @@ Result * Real::operator+(ValidResult const * other)
 	r->datum = datum + _other->datum;
 
 	return r;
+}
+
+Result* Real::operator -(ValidResult const * other)
+{
+	const Real* _other;
+
+	if(TryConvert(other, _other) == false)
+		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to Real");
+	
+	Real* t = new Real(datum - _other->datum);
+
+	return t;
 }
 
 Result * Real::operator*(ValidResult const * other)

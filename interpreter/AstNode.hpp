@@ -9,8 +9,6 @@
 
 #include "Result.hpp"
 
-
-
 class AstNode
 {
 public:
@@ -39,7 +37,7 @@ protected:
 	std::pair<Result*, Result*> GetBinaryOperands();
 
 	// Extracts binary operands from the 'children' array and applies the given operator by calling the 'BinaryOperation' function
-	template<typename iType, typename P> Result* Apply(Result* (iType::*operation) (P) )
+	template<typename P, typename iType> Result* Apply(Result* (iType::*operation) (P) )
 	{
 		assert(children.size() == 2);		// Assert binary node has valid children count
 
@@ -52,7 +50,7 @@ protected:
 			return AstNode::HandleError(Convert<ErrorResult>(rhs));
 
 		iType* token_l;
-		if(TryConvert<iType>(lhs, token_l) == false)
+		if(TryConvert<Result, iType>(lhs, token_l) == false)
 			return new ErrorResult("Operand " + lhs->MyTypeString() + " is not of " + iType::ToString() + " type");
 
 		ValidResult* token_r = (ValidResult*)(rhs);
@@ -76,6 +74,16 @@ class AdditionNode : public BinaryNode
 public:
 	AdditionNode() {}
 	AdditionNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
+
+	virtual Result* Evaluate();
+
+};
+
+class SubtractionNode : public BinaryNode
+{
+public:
+	SubtractionNode() {}
+	SubtractionNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
 
 	virtual Result* Evaluate();
 
@@ -108,6 +116,16 @@ public:
 	LessComparisonNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
 
 	virtual Result* Evaluate();
+};
+
+class NegationNode : public AstNode 
+{
+public:
+	NegationNode() {}
+	NegationNode(AstNode* operand) { AddChild(operand); }
+
+	virtual Result* Evaluate();
+
 };
 
 class LiteralNode : public AstNode
