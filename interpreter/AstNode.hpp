@@ -15,6 +15,7 @@ public:
 	virtual Result* Evaluate() = 0;
 
 	void AddChild(AstNode* child);
+	std::vector<AstNode*> GetChildren() {return children;}
 	void AddChildFront(AstNode* child);
 	bool IsLeaf();
 
@@ -125,7 +126,6 @@ public:
 	NegationNode(AstNode* operand) { AddChild(operand); }
 
 	virtual Result* Evaluate();
-
 };
 
 class LiteralNode : public AstNode
@@ -156,8 +156,6 @@ private:
 	std::string name;				// identifier name
 };
 
-
-
 class AssignmentNode : public BinaryNode
 {
 public:
@@ -179,7 +177,22 @@ private:
 	ValidResult* identifierObject; 
 };
 
+class ArrayNode : public AstNode
+{
+public:
+	ArrayNode() : arrayName("") {}
+	ArrayNode(std::string name, AstNode* coords) : arrayName(name) { AddChild(coords); }
+	virtual Result* Evaluate();
+private:
+	std::string arrayName;	
+};
 
+
+class NumExprList : public AstNode 
+{
+public:
+	virtual Result* Evaluate() {}
+};
 
 
 #endif

@@ -7,7 +7,6 @@ Scope Scope::currentScope;
 
 bool Scope::AddIdentifier(std::string name, ValidResult * value)
 {
-	std::cout << "Adding identifier " << name << std::endl; 
 	if (identifiers.find(name) != identifiers.end())	// already exists
 		return false;
 

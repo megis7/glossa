@@ -90,7 +90,6 @@ class LComparable
 public:
 	virtual Result* operator &&(ValidResult* other) const = 0;
 	virtual Result* operator ||(ValidResult* other) const = 0;
-	virtual Result* operator !() const = 0;
 
 	static std::string ToString() { return "LComparable"; }
 	

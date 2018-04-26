@@ -25,6 +25,10 @@ extern "C" void yyerror(char* str);
 "repeat"                {return REPEAT;}
 "endwhile"              {return ENDWHILE;}
 
+"["                     { return LBRAK; }
+"]"                     { return RBRAK; }
+","                     { return COMMA; }
+
 "not"                   {return BOOL_NEGATE;}
 
 "true"                  {yylval.val.bval = 1; return BOOLEAN;}

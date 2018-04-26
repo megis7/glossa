@@ -70,8 +70,42 @@ Result * MultiplicationNode::Evaluate()
 
 Result * IdentifierNode::Evaluate()
 {
+	Result* res = Scope::GetCurrentScope().GetIdentifier(name);
+
 	// use 'name' to get value from the variables of the current scope
-	return Scope::GetCurrentScope().GetIdentifier(name);		// TODO: This can return nullptr when the variable is not declared in the scope
+	if(res == nullptr)
+		return new ErrorResult("Identifier " + name + " is not declared");
+	return res;
+}
+
+Result* ArrayNode::Evaluate()
+{
+	std::vector<AstNode*> _coords = children[0]->GetChildren();
+	std::vector<Integer*> coords;
+	coords.reserve(_coords.size());
+
+	for(int i = 0; i < _coords.size(); i++)
+	{
+		Result* res = _coords[i]->Evaluate();
+		Integer* int_res;
+
+		if(TryConvert(res, int_res) == false)
+			return new ErrorResult("Array index must be integer");
+
+		coords.push_back(int_res);
+	}
+
+	std::cout << "Array indices: ";
+
+	for(int i = 0; i < _coords.size(); i++)
+		std::cout << *coords[i] << " ";
+
+	std::cout << std::endl;
+
+	Result* res = Scope::GetCurrentScope().GetIdentifier(arrayName);
+	if(res == nullptr)
+		return new ErrorResult("Identifier " + arrayName + " is not declared");
+	return res;
 }
 
 Result * DivisionNode::Evaluate()

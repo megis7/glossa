@@ -16,7 +16,7 @@ Result * Integer::operator+(ValidResult const * other)
 	const Integer* _other = dynamic_cast<Integer const *>(other);
 
 	if(_other == nullptr)
-		return new ErrorResult("Could not convert ValidResult object to Integer");
+		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to Integer");
 
 	Integer* t = new Integer();
 	t->datum = datum + _other->datum;
@@ -28,7 +28,7 @@ Result * Integer::operator*(ValidResult const * other)
 	const Integer* _other = dynamic_cast<Integer const *>(other);
 
 	if(_other == nullptr)
-		return new ErrorResult("Could not convert ValidResult object to Integer");
+		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to Integer");
 
 	Integer* t = new Integer();
 	t->datum = datum * _other->datum;
@@ -41,7 +41,7 @@ Result * Integer::operator/(ValidResult const * other)
 	const Integer* _other = dynamic_cast<Integer const *>(other);
 
 	if(_other == nullptr)
-		return new ErrorResult("Could not convert ValidResult object to Integer");
+		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to Integer");
 	
 	if(_other->datum == 0)
 		return new ErrorResult("Cannot divide by 0");
@@ -68,7 +68,7 @@ Result * Integer::operator= (Result * other)
 	const Integer* _other = dynamic_cast<Integer const *>(other);
 
 	if(_other == nullptr)
-		return new ErrorResult("Could not convert ValidResult object to Integer");
+		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to Integer");
 	
 	datum = _other->datum;
 	return this;
@@ -79,7 +79,7 @@ Result* Integer::operator<(ValidResult* other)
 	Integer* _other = dynamic_cast<Integer *>(other);
 
 	if(_other == nullptr)
-		return new ErrorResult("Could not convert ValidResult object to Integer");
+		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to Integer");
 
 	return new Boolean(datum < _other->datum);
 }
@@ -102,7 +102,7 @@ Result * Real::operator+(ValidResult const * other)
 	const Real* _other = dynamic_cast<Real const *>(other);
 
 	if(_other == nullptr)
-		return new ErrorResult("Could not convert ValidResult object to Real");
+		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to Real");
 
 	Real* r = new Real();
 	r->datum = datum + _other->datum;
@@ -127,7 +127,7 @@ Result * Real::operator*(ValidResult const * other)
 	const Real* _other = dynamic_cast<Real const *>(other);
 
 	if(_other == nullptr)
-		return new ErrorResult("Could not convert ValidResult object to Real");
+		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to Real");
 
 	Real* r = new Real();
 	r->datum = datum * _other->datum;
@@ -140,7 +140,7 @@ Result * Real::operator/(ValidResult const * other)
 	const Real* _other = dynamic_cast<Real const *>(other);
 
 	if(_other == nullptr)
-		return new ErrorResult("Could not convert ValidResult object to Real");
+		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to Real");
 
 	if(abs(_other->datum) <= Real::accuracy)
 		return new ErrorResult("Cannot divide by 0");
@@ -156,7 +156,7 @@ Result* Real::operator= (Result * other)
 	const Real* _other = dynamic_cast<Real const *>(other);
 
 	if(_other == nullptr)
-		return new ErrorResult("Could not convert ValidResult object to Real");
+		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to Real");
 
 	datum = _other->datum;
 	return this;
@@ -167,7 +167,7 @@ Result* Real::operator <(ValidResult* other)
 	Real* _other = dynamic_cast<Real *>(other);
 
 	if(_other == nullptr)
-		return new ErrorResult("Could not convert ValidResult object to Integer");
+		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to Integer");
 
 	return new Boolean(datum < _other->datum);
 }	
@@ -184,7 +184,7 @@ Result * Boolean::operator=(Result * other)
 	Boolean* _other;
 
 	if(TryConvert(other, _other) == false)
-		return new ErrorResult("Could not convert ValidResult object to Boolean");
+		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to Boolean");
 	
 	datum = _other->datum;
 	return this;
@@ -194,7 +194,7 @@ Result* Boolean::operator &&(ValidResult* other) const
 {
 	const Boolean* _other;
 	if(TryConvert(other, _other) == false)
-		return new ErrorResult("Could not convert ValidResult object to Boolean");
+		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to Boolean");
 	
 	if(this->IsTrue() && _other->IsTrue())
 		return &BooleanTrue;
@@ -206,7 +206,7 @@ Result* Boolean::operator ||(ValidResult* other) const
 {
 	const Boolean* _other;
 	if(TryConvert(other, _other) == false)
-		return new ErrorResult("Could not convert ValidResult object to Boolean");
+		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to Boolean");
 	
 	if(this->IsTrue() || _other->IsTrue())
 		return &BooleanTrue;
