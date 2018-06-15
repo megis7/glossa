@@ -7,7 +7,7 @@
 #include <functional>
 #include <cassert>
 
-#include "Result.hpp"
+#include <Result.hpp>
 
 class AstNode
 {

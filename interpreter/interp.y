@@ -3,15 +3,15 @@
 extern "C" void yyerror (char *s);
 int yylex();
 
-#include "types.h"
+#include <types.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <functional>
 
 #include <iostream>
 
-#include "AstNode.hpp"
-#include "Structures.hpp"
+#include <AstNode.hpp>
+#include <Structures.hpp>
 
 extern AstNode* root;
 

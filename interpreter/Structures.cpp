@@ -1,4 +1,4 @@
-#include "Structures.hpp"
+#include <Structures.hpp>
 #include <cassert>
 
 Result* ConditionalStatements::Evaluate()

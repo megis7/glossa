@@ -1,6 +1,6 @@
-#include "AstNode.hpp"
-#include "Scope.hpp"
-#include "Structures.hpp"
+#include <AstNode.hpp>
+#include <Scope.hpp>
+#include <Structures.hpp>
 #include <cassert>
 #include <functional>
 
@@ -89,8 +89,8 @@ Result* ArrayNode::Evaluate()
 		Result* res = _coords[i]->Evaluate();
 		Integer* int_res;
 
-		if(TryConvert(res, int_res) == false)
-			return new ErrorResult("Array index must be integer");
+		if(TryConvert(res, int_res) == false || int_res <= 0)
+			return new ErrorResult("Array index must be positive integer");
 
 		coords.push_back(int_res);
 	}

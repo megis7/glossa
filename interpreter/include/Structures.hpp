@@ -1,8 +1,8 @@
 #ifndef STRUCTURES_H
 #define STRUCTURES_H
 
-#include "AstNode.hpp"
-#include "Result.hpp"
+#include <AstNode.hpp>
+#include <DataTypes.hpp>
 
 class SuccessionStructure : public AstNode
 {
