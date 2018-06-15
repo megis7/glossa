@@ -36,5 +36,5 @@ void Scope::SetCurrentScope(Scope & scope)
 void Scope::PrintAllVariables()
 {
 	for(auto iter = identifiers.begin(); iter != identifiers.end(); iter++)
-		std::cout << iter->first << " = " << *iter->second << std::endl;
+		std::cout << iter->first << " = " << *iter->second << " -- " << iter->second->MyTypeString() << std::endl;
 }

@@ -41,7 +41,7 @@ public:
 	ErrorResult(std::string _message) : message(_message), handled(false) {}
 
 	virtual bool IsSane() final { return false; }
-	virtual std::string ToString() const;	
+	virtual std::string ToString() const;
 
 	virtual Type MyType() const { return ERROR_TYPE; }
 	virtual std::string MyTypeString() const { return "Error"; }

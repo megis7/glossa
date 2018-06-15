@@ -341,13 +341,13 @@ Result* Boolean::operator ~()
 /********************************************************************************************/
 
 
-Result* String::operator= (Result * other)
+Result* String::operator= (Result* other)
 {
 	String* _other;
 
 	if(TryConvert(other, _other) == false)
 		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to String");
-	
+
 	datum = _other->datum;
 	return this;
 }

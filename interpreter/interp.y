@@ -36,14 +36,15 @@ extern AstNode* root;
 %token <val> STRING
 %token <val> IDENTIFIER
 
-%token DECLARE REAL_DECL INTEGER_DECL BOOL_DECL
+%token DECLARE REAL_DECL INTEGER_DECL BOOL_DECL STRING_DECL
 %token IF THEN ELSEIF ELSE ENDIF
 %token WHILE REPEAT ENDWHILE
 %token BOOL_NEGATE
-%token LBRAK RBRAK COMMA;
-%token LESS LESS_THAN GREATER GREATER_THAN;
-%token AND OR;
-%token DEQUALS NEQUALS;
+%token LBRAK RBRAK COMMA
+%token LESS LESS_THAN GREATER GREATER_THAN
+%token AND OR
+%token DEQUALS NEQUALS
+%token ASSIGN
 
 %type <val> atom unary multipl statement statements assignment declaration elseifs while comparison
 
@@ -69,22 +70,27 @@ statements:   %empty										{ $<val.node>$ = new SuccessionStructure(); }
 			| statements statement							{ $<val.node>$->AddChild($<val.node>2); }
 			;			
 
-statement:	  expression ';'								{ $<val.node>$ = $<val.node>1; /* This should be removed */ }
+statement:	  expression ';'								{ $<val.node>$ = $<val.node>1; }
 			| assignment ';'								{ $<val.node>$ = $<val.node>1; }
-			| declaration 									{ $<val.node>$ = $<val.node>1; }
+			| declaration ';'								{ $<val.node>$ = $<val.node>1; }
 			| conditional									{ $<val.node>$ = $<val.node>1; }
 			| while											{ $<val.node>$ = $<val.node>1; }
 			;
 
-declaration:  DECLARE INTEGER_DECL IDENTIFIER ';' 			{ $<val.node>$ = new DeclarationNode($<val.sval>3, new Integer(0)); }
-			| DECLARE BOOL_DECL IDENTIFIER ';' 				{ $<val.node>$ = new DeclarationNode($<val.sval>3, new Boolean(false)); }
-			| DECLARE REAL_DECL IDENTIFIER ';' 				{ $<val.node>$ = new DeclarationNode($<val.sval>3, new Real(0)); }
+declaration:  DECLARE INTEGER_DECL identifier_list 		{ $<val.node>$ = new DeclarationNode<Integer>($<val.node>3); }
+			| DECLARE BOOL_DECL identifier_list 		{ $<val.node>$ = new DeclarationNode<Boolean>($<val.node>3); }
+			| DECLARE REAL_DECL identifier_list 		{ $<val.node>$ = new DeclarationNode<Real>($<val.node>3); }
+			| DECLARE STRING_DECL identifier_list 		{ $<val.node>$ = new DeclarationNode<String>($<val.node>3); }
 			;
 
-expression:   lcomparison					{$<val.node>$ = $<val.node>1;}			
+identifier_list:	  IDENTIFIER								{ $<val.node>$ = new IdentifierList($<val.sval>1); }
+					| identifier_list COMMA IDENTIFIER			{ ((IdentifierList*)$<val.node>$)->AddIdentifier($<val.sval>3); }
+					;
+
+expression:   lcomparison							{$<val.node>$ = $<val.node>1;}			
 			;
 
-assignment:   IDENTIFIER '=' expression	 	{$<val.node>$ = new AssignmentNode(new IdentifierNode($<val.sval>1), $<val.node>3);}
+assignment:   IDENTIFIER ASSIGN expression	 		{$<val.node>$ = new AssignmentNode(new IdentifierNode($<val.sval>1), $<val.node>3);}
 			;
 
 

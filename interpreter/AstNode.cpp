@@ -163,21 +163,25 @@ Result* AssignmentNode::Evaluate()
 	if(operands.second->IsSane() == false)
 		return AstNode::HandleError(static_cast<ErrorResult*>(operands.second));
 
-	operands.first->operator=(operands.second);
-
-	return operands.second;			// TODO: Perhaps the return type of an assignment will be void 
+	return operands.first->operator=(operands.second);
 
 	// return BinaryNode::Apply<Result*, Result>(&Result::operator=);		This doesnt work since the function 'Apply' requires static ToString
 }
 
-Result* DeclarationNode::Evaluate()
-{
-	if(Scope::GetCurrentScope().AddIdentifier(identifierName, identifierObject) == false)
-		return new ErrorResult("Identifier " + identifierName + " is already declared");
+// template<class T>
+// Result* DeclarationNode::Evaluate()
+// {
+// 	IdentifierList* identifiers = dynamic_cast<IdentifierList*>(children[0]);
 
-	// success
-	return new Void();
-}
+// 	for(std::string s : identifiers->identifierNames)
+// 	{
+// 		if(Scope::GetCurrentScope().AddIdentifier(s, new T()) == false)
+// 			return new ErrorResult("Identifier " + s + " is already declared");
+// 	}
+
+// 	// success
+// 	return new Void();
+// }
 
 Result* NegationNode::Evaluate()
 {

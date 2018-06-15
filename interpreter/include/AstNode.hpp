@@ -8,6 +8,8 @@
 #include <cassert>
 
 #include <Result.hpp>
+#include <DataTypes.hpp>
+#include <Scope.hpp>
 
 class AstNode
 {
@@ -230,16 +232,40 @@ public:
 	virtual Result* Evaluate();
 };
 
+class IdentifierList : public AstNode
+{
+public:
+	IdentifierList() {}
+	IdentifierList(std::string name) { AddIdentifier(name); }
+
+	void AddIdentifier(std::string name) { identifierNames.push_back(name); }
+
+	virtual Result* Evaluate() {}
+public:
+	std::vector<std::string> identifierNames;
+};
+
+template<class T>
 class DeclarationNode : public AstNode
 {
 public:
-	DeclarationNode() : identifierName(""), identifierObject(nullptr) {}
-	DeclarationNode(std::string name, ValidResult* value) : identifierName(name), identifierObject(value) {}
+	DeclarationNode() {}
+	DeclarationNode(AstNode* identifiers) { AddChild(identifiers); }
 	
-	virtual Result* Evaluate();
+	virtual Result* Evaluate()
+	{
+		IdentifierList* identifiers = dynamic_cast<IdentifierList*>(children[0]);
+
+		for(std::string s : identifiers->identifierNames)
+		{
+			if(Scope::GetCurrentScope().AddIdentifier(s, new T()) == false)
+				return new ErrorResult("Identifier " + s + " is already declared");
+		}
+
+		// success
+		return new Void();
+	}
 private:
-	std::string identifierName;
-	ValidResult* identifierObject; 
 };
 
 class ArrayNode : public AstNode
@@ -251,7 +277,6 @@ public:
 private:
 	std::string arrayName;	
 };
-
 
 class NumExprList : public AstNode 
 {
