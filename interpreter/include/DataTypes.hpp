@@ -87,8 +87,8 @@ public:
 
 	// LComparable implementation
 	// These operations are short-circuited, but this happens after validating that "other" is of Boolean type
-	virtual Result* operator &&(const ValidResult* other) const;
-	virtual Result* operator ||(const ValidResult* other) const;
+	virtual Result* operator &&(const ValidResult* other);
+	virtual Result* operator ||(const ValidResult* other);
 
 	virtual Result* operator ==(const ValidResult* other);
 	virtual Result* operator !=(const ValidResult* other);
@@ -99,8 +99,8 @@ public:
 
 
 	// Define the two boolean values 'true' and 'false'
-	static Boolean BooleanTrue;
-	static Boolean BooleanFalse;
+	static Boolean* BooleanTrue() { return new Boolean(true); }
+	static Boolean* BooleanFalse() { return new Boolean(false); }
 
 public:
 	bool datum;

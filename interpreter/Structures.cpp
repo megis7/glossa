@@ -16,10 +16,10 @@ Result* ConditionalStatements::Evaluate()
 	if(cond_bool->IsTrue())
 	{
 		statements->Evaluate();
-		return &Boolean::BooleanTrue; 	// return special Result that shows 'cond_bool' was true (and no other else-if should be executed -- latch)
+		return Boolean::BooleanTrue(); 	// return special Result that shows 'cond_bool' was true (and no other else-if should be executed -- latch)
 	}
 	
-	return &Boolean::BooleanFalse;
+	return Boolean::BooleanFalse();
 }
 
 Result* SuccessionStructure::Evaluate()

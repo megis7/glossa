@@ -27,7 +27,7 @@ class ConditionalStatements : public AstNode
 public:
 	ConditionalStatements() : condition(nullptr), statements(nullptr) {}
 	ConditionalStatements(AstNode* _condition, AstNode* _statements) : condition(_condition) {statements = dynamic_cast<SuccessionStructure*>(_statements);}
-	ConditionalStatements(AstNode* _statements) : condition(new LiteralNode(&Boolean::BooleanTrue)) {statements = dynamic_cast<SuccessionStructure*>(_statements);}
+	ConditionalStatements(AstNode* _statements) : condition(new LiteralNode(Boolean::BooleanTrue())) {statements = dynamic_cast<SuccessionStructure*>(_statements);}
 	virtual Result* Evaluate();
 
 private:

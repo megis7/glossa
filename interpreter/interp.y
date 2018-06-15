@@ -19,7 +19,6 @@ extern AstNode* root;
 
 %union {	
 	struct {
-		// Type type;		// these are semantics
 		union
 		{
 			int ival;
@@ -37,11 +36,14 @@ extern AstNode* root;
 %token <val> STRING
 %token <val> IDENTIFIER
 
-%token DECLARE REAL_DECL INTEGER_DECL BOOL_DECL LESS
+%token DECLARE REAL_DECL INTEGER_DECL BOOL_DECL
 %token IF THEN ELSEIF ELSE ENDIF
 %token WHILE REPEAT ENDWHILE
 %token BOOL_NEGATE
 %token LBRAK RBRAK COMMA;
+%token LESS LESS_THAN GREATER GREATER_THAN;
+%token AND OR;
+%token DEQUALS NEQUALS;
 
 %type <val> atom unary multipl statement statements assignment declaration elseifs while comparison
 
@@ -79,14 +81,28 @@ declaration:  DECLARE INTEGER_DECL IDENTIFIER ';' 			{ $<val.node>$ = new Declar
 			| DECLARE REAL_DECL IDENTIFIER ';' 				{ $<val.node>$ = new DeclarationNode($<val.sval>3, new Real(0)); }
 			;
 
-expression:   comparison					{$<val.node>$ = $<val.node>1;}
-			| num_expr						{$<val.node>$ = $<val.node>1;}			
+expression:   lcomparison					{$<val.node>$ = $<val.node>1;}			
 			;
 
 assignment:   IDENTIFIER '=' expression	 	{$<val.node>$ = new AssignmentNode(new IdentifierNode($<val.sval>1), $<val.node>3);}
 			;
 
-comparison:   num_expr '<' num_expr			{$<val.node>$ = new LessComparisonNode($<val.node>1, $<val.node>3);}
+
+lcomparison:  lcomparison AND equation				{$<val.node>$ = new ANDComparisonNode($<val.node>1, $<val.node>3);}
+			| lcomparison OR equation				{$<val.node>$ = new ORComparisonNode($<val.node>1, $<val.node>3);}
+			| equation								{$<val.node>$ = $<val.node>1;}
+			;	
+
+equation:	  comparison DEQUALS comparison			{$<val.node>$ = new EqualComparisonNode($<val.node>1, $<val.node>3);}
+			| comparison NEQUALS comparison			{$<val.node>$ = new NotEqualComparisonNode($<val.node>1, $<val.node>3);}
+			| comparison							{$<val.node>$ = $<val.node>1;}
+			;
+
+comparison:   num_expr LESS num_expr				{$<val.node>$ = new LessComparisonNode($<val.node>1, $<val.node>3);}
+			| num_expr GREATER num_expr				{$<val.node>$ = new GreaterComparisonNode($<val.node>1, $<val.node>3);}
+			| num_expr LESS_THAN num_expr			{$<val.node>$ = new LessThanComparisonNode($<val.node>1, $<val.node>3);}
+			| num_expr GREATER_THAN num_expr		{$<val.node>$ = new GreaterThanComparisonNode($<val.node>1, $<val.node>3);}
+			| num_expr								{$<val.node>$ = $<val.node>1;}
 			;
 
 num_expr:     addition						{$<val.node>$ = $<val.node>1;}

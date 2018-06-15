@@ -29,10 +29,21 @@ extern "C" void yyerror(char* str);
 "]"                     { return RBRAK; }
 ","                     { return COMMA; }
 
-"not"                   {return BOOL_NEGATE;}
+"<"                     { return LESS; }
+">"                     { return GREATER; }
+"<="                    { return LESS_THAN; }
+">="                    { return GREATER_THAN; }
 
-"true"                  {yylval.val.bval = 1; return BOOLEAN;}
-"false"                 {yylval.val.bval = 0; return BOOLEAN;}
+"&&"                    { return AND; }
+"||"                    { return OR; }
+
+"not"                   { return BOOL_NEGATE; }
+
+"=="                    { return DEQUALS; }
+"<>"                    { return NEQUALS; }
+
+"true"                  {yylval.val.bval = true; return BOOLEAN;}
+"false"                 {yylval.val.bval = false; return BOOLEAN;}
 
 \"(\\.|[^\\"])*\"       {yylval.val.sval = strcpy(new char[yyleng], yytext); return STRING;}
 
@@ -42,7 +53,7 @@ extern "C" void yyerror(char* str);
 ([0-9]+[.][0-9]+)       {yylval.val.rval = atof(yytext); return REAL;}
 
 [ \t\n]                 ;                                
-[-+=*/!()<;]            {return yytext[0];}
+[-+=*/!();]             {return yytext[0];}
 .                       {ECHO; yyerror ("unexpected character");}
 
 %%

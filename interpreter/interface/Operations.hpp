@@ -26,8 +26,8 @@ public:
 class LComparable
 {
 public:
-	virtual Result* operator &&(const ValidResult* other) const = 0;
-	virtual Result* operator ||(const ValidResult* other) const = 0;
+	virtual Result* operator &&(const ValidResult* other) = 0;
+	virtual Result* operator ||(const ValidResult* other) = 0;
 
 	static std::string ToString() { return "LComparable"; }
 	

@@ -3,8 +3,6 @@
 #include <cmath>
 
 double Real::accuracy = 0.0001;
-Boolean Boolean::BooleanTrue = Boolean(true);
-Boolean Boolean::BooleanFalse = Boolean(false);
 
 std::ostream & operator<<(std::ostream & str, Result const & data)
 {
@@ -132,7 +130,7 @@ Result* Integer::operator !=(const ValidResult* other)
 	if(TryConvert(other, _other) == false)
 		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to Integer");
 
-	return new Boolean(datum == _other->datum);
+	return new Boolean(datum != _other->datum);
 }
 
 std::string Integer::ToString() const
@@ -290,28 +288,22 @@ Result* Boolean::operator=(Result * other)
 	return this;
 }
 
-Result* Boolean::operator &&(const ValidResult* other) const
+Result* Boolean::operator &&(const ValidResult* other)
 {
 	const Boolean* _other;
 	if(TryConvert(other, _other) == false)
 		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to Boolean");
 	
-	if(this->IsTrue() && _other->IsTrue())
-		return &BooleanTrue;
-	
-	return &BooleanFalse;
+	return new Boolean(this->IsTrue() && _other->IsTrue());
 }
 
-Result* Boolean::operator ||(const ValidResult* other) const
+Result* Boolean::operator ||(const ValidResult* other)
 {
 	const Boolean* _other;
 	if(TryConvert(other, _other) == false)
 		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to Boolean");
 	
-	if(this->IsTrue() || _other->IsTrue())
-		return &BooleanTrue;
-	
-	return &BooleanFalse;
+	return new Boolean(this->IsTrue() || _other->IsTrue());
 }
 
 Result* Boolean::operator ==(const ValidResult* other)
@@ -320,10 +312,7 @@ Result* Boolean::operator ==(const ValidResult* other)
 	if(TryConvert(other, _other) == false)
 		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to Boolean");
 	
-	if(this->IsTrue() == _other->IsTrue())
-		return &BooleanTrue;
-	
-	return &BooleanFalse;
+	return new Boolean(this->IsTrue() == _other->IsTrue());
 }
 
 Result* Boolean::operator !=(const ValidResult* other)
@@ -332,10 +321,7 @@ Result* Boolean::operator !=(const ValidResult* other)
 	if(TryConvert(other, _other) == false)
 		return new ErrorResult("Could not convert " + other->MyTypeString() + " object to Boolean");
 	
-	if(this->IsTrue() != _other->IsTrue())
-		return &BooleanTrue;
-	
-	return &BooleanFalse;
+	return new Boolean(this->IsTrue() != _other->IsTrue());
 }
 
 Result* Boolean::operator ~() 

@@ -24,4 +24,19 @@ declare boolean b;
 
 g = 1 + 2 < 1 + g;
 
-b = not (2 < 1);
+b = not (2 > 1);
+15;
+b = (0.999999 < 1.0 && 2 <> 2 || 1 + 2 == 3 + 4) == false;
+b = (not (2 > 1) || 2 < 1);
+b = (2 <= 2);
+b = (2 >= 1);
+
+!x = 0;
+!y = 0;
+
+!while x <= 10 repeat
+!    if not (x <> 5 && x <> 3) == false then
+!        y = y + 1;
+!    endif
+!    x = x + 1;
+!endwhile

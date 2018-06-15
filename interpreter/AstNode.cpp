@@ -23,7 +23,7 @@ Result* AstNode::HandleError(ErrorResult* error)
 {
 	if(error->IsHandled() == false)
 	{
-		std::cerr << *error;
+		//std::cerr << *error;
 		error->Handle();
 	}
 
@@ -116,6 +116,41 @@ Result * DivisionNode::Evaluate()
 Result* LessComparisonNode::Evaluate()
 {
 	return BinaryNode::Apply(&Comparable::operator<);	
+}
+
+Result* GreaterComparisonNode::Evaluate()
+{
+	return BinaryNode::Apply(&Comparable::operator>);
+}
+
+Result* LessThanComparisonNode::Evaluate()
+{
+	return BinaryNode::Apply(&Comparable::operator<=);
+}
+
+Result* GreaterThanComparisonNode::Evaluate()
+{
+	return BinaryNode::Apply(&Comparable::operator>=);
+}
+
+Result* ANDComparisonNode::Evaluate()
+{
+	return BinaryNode::Apply(&LComparable::operator&&);
+}
+
+Result* ORComparisonNode::Evaluate()
+{
+	return BinaryNode::Apply(&LComparable::operator||);
+}
+
+Result* EqualComparisonNode::Evaluate()
+{
+	return BinaryNode::Apply(&Equitable::operator==);
+}
+
+Result* NotEqualComparisonNode::Evaluate()
+{
+	return BinaryNode::Apply(&Equitable::operator!=);
 }
 
 Result* AssignmentNode::Evaluate()

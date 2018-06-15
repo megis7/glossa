@@ -119,6 +119,71 @@ public:
 	virtual Result* Evaluate();
 };
 
+class GreaterComparisonNode : public BinaryNode
+{
+public:
+	GreaterComparisonNode() {}
+	GreaterComparisonNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
+
+	virtual Result* Evaluate();
+};
+
+class LessThanComparisonNode : public BinaryNode
+{
+public:
+	LessThanComparisonNode() {}
+	LessThanComparisonNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
+
+	virtual Result* Evaluate();
+};
+
+
+class GreaterThanComparisonNode : public BinaryNode
+{
+public:
+	GreaterThanComparisonNode() {}
+	GreaterThanComparisonNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
+
+	virtual Result* Evaluate();
+};
+
+class ANDComparisonNode : public BinaryNode
+{
+public:
+	ANDComparisonNode() {}
+	ANDComparisonNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
+
+	virtual Result* Evaluate();
+};
+
+class ORComparisonNode : public BinaryNode
+{
+public:
+	ORComparisonNode() {}
+	ORComparisonNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
+
+	virtual Result* Evaluate();
+};
+
+class EqualComparisonNode : public BinaryNode
+{
+public:
+	EqualComparisonNode() {}
+	EqualComparisonNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
+
+	virtual Result* Evaluate();
+};
+
+class NotEqualComparisonNode : public BinaryNode
+{
+public:
+	NotEqualComparisonNode() {}
+	NotEqualComparisonNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
+
+	virtual Result* Evaluate();
+};
+
+
 class NegationNode : public AstNode 
 {
 public:
