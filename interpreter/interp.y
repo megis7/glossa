@@ -34,6 +34,7 @@ extern AstNode* root;
 %token <val> INTEGER
 %token <val> BOOLEAN
 %token <val> REAL
+%token <val> STRING
 %token <val> IDENTIFIER
 
 %token DECLARE REAL_DECL INTEGER_DECL BOOL_DECL LESS
@@ -113,6 +114,7 @@ num_expr_list:	  num_expr						{ $<val.node>$ = new NumExprList(); $<val.node>$-
 atom:		  INTEGER									{$<val.node>$ = new LiteralNode(new Integer($<val.ival>1));}
 			| REAL										{$<val.node>$ = new LiteralNode(new Real($<val.rval>1));}
 			| BOOLEAN									{$<val.node>$ = new LiteralNode(new Boolean($<val.bval>1));}
+			| STRING									{$<val.node>$ = new LiteralNode(new String($<val.sval>1));}
 			| IDENTIFIER								{$<val.node>$ = new IdentifierNode($<val.sval>1);}
 			| IDENTIFIER LBRAK num_expr_list RBRAK		{$<val.node>$ = new ArrayNode($<val.sval>1, $<val.node>3);} 
 			| '(' expression ')'						{$<val.node>$ = $<val.node>2;}

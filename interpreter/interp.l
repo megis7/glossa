@@ -34,6 +34,8 @@ extern "C" void yyerror(char* str);
 "true"                  {yylval.val.bval = 1; return BOOLEAN;}
 "false"                 {yylval.val.bval = 0; return BOOLEAN;}
 
+\"(\\.|[^\\"])*\"       {yylval.val.sval = strcpy(new char[yyleng], yytext); return STRING;}
+
 [a-zA-Z]+			    {yylval.val.sval = strcpy(new char[strlen(yytext)], yytext); return IDENTIFIER;}
 
 [0-9]+                  {yylval.val.ival = atoi(yytext); return INTEGER;}
