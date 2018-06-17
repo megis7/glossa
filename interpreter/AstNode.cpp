@@ -168,21 +168,6 @@ Result* AssignmentNode::Evaluate()
 	// return BinaryNode::Apply<Result*, Result>(&Result::operator=);		This doesnt work since the function 'Apply' requires static ToString
 }
 
-// template<class T>
-// Result* DeclarationNode::Evaluate()
-// {
-// 	IdentifierList* identifiers = dynamic_cast<IdentifierList*>(children[0]);
-
-// 	for(std::string s : identifiers->identifierNames)
-// 	{
-// 		if(Scope::GetCurrentScope().AddIdentifier(s, new T()) == false)
-// 			return new ErrorResult("Identifier " + s + " is already declared");
-// 	}
-
-// 	// success
-// 	return new Void();
-// }
-
 Result* NegationNode::Evaluate()
 {
 	Result* operand = children[0]->Evaluate();

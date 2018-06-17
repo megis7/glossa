@@ -114,7 +114,8 @@ comparison:   num_expr LESS num_expr				{$<val.node>$ = new LessComparisonNode($
 num_expr:     addition						{$<val.node>$ = $<val.node>1;}
 			;
 
-addition: 	  addition '+' multipl			{$<val.node>$ = new AdditionNode($<val.node>1, $<val.node>3);}
+// addition: 	  addition '+' multipl			{$<val.node>$ = new AdditionNode($<val.node>1, $<val.node>3);}
+addition: 	  addition '+' multipl			{$<val.node>$ = new BinaryNodeSpecific<const ValidResult*, Operable>($<val.node>1, $<val.node>3, &Operable::operator+);}
 			| addition '-' multipl			{$<val.node>$ = new SubtractionNode($<val.node>1, $<val.node>3);}
 			| multipl						{$<val.node>$ = $<val.node>1;}
 			;

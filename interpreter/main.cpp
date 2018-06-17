@@ -14,6 +14,22 @@ int yyparse();
 
 int main (void) 
 {
+	// Result* (Operable::*x)(const ValidResult*) = &Operable::operator+;
+
+	Integer* x1 = new Integer(5);
+	Integer* x2 = new Integer(6);
+
+	// Result* res = (x1->*x)(x2);
+
+	// std::cout << *res << std::endl;
+
+	// auto b = new BinaryNodeSpecific<const ValidResult*, Operable>(new LiteralNode(x1), new LiteralNode(x2), &Operable::operator+);
+
+	// std::cout << *b->Evaluate() << std::endl;
+
+	// // std::cout << ((new Integer(1))->*x(new Integer(10))) << std::endl;
+	// return 0;
+
 	// setup the local scope of variables
 	Scope local;
 	Scope::SetCurrentScope(local);

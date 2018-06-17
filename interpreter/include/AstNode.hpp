@@ -72,6 +72,22 @@ private:
 	}
 };
 
+template<class P, class iType>
+class BinaryNodeSpecific : public BinaryNode
+{
+public:
+	// BinaryNodeSpecific() {}
+	// BinaryNodeSpecific(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
+	BinaryNodeSpecific(AstNode* lhs, AstNode* rhs, Result* (iType::*_operation)(P)) : BinaryNode(lhs, rhs), operation(_operation) {}
+
+	virtual Result* Evaluate() 
+	{
+		return BinaryNode::Apply(operation);
+	}
+
+	Result* (iType::*operation)(P);
+};
+
 class AdditionNode : public BinaryNode
 {
 public:
@@ -79,7 +95,6 @@ public:
 	AdditionNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
 
 	virtual Result* Evaluate();
-
 };
 
 class SubtractionNode : public BinaryNode
