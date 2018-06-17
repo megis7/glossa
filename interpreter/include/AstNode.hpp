@@ -31,16 +31,26 @@ protected:
 	std::vector<AstNode*> children;
 };
 
+template<typename P, typename iType>
 class BinaryNode : public AstNode
 {
-protected:
+public:
 	BinaryNode(){}
-	BinaryNode(AstNode* lhs, AstNode* rhs) { AddChild(lhs); AddChild(rhs); } 
+	BinaryNode(AstNode* lhs, AstNode* rhs, Result* (iType::*_operation)(P)) : operation(_operation) { AddChild(lhs); AddChild(rhs); } 
 
-	std::pair<Result*, Result*> GetBinaryOperands();
+	std::pair<Result*, Result*> GetBinaryOperands()
+	{
+		assert(children.size() == 2);
+		assert(children[0] != nullptr && children[1] != nullptr);
+
+		Result *lhs = children[0]->Evaluate(),
+			*rhs = children[1]->Evaluate();
+
+		return std::make_pair(lhs, rhs);
+	}
 
 	// Extracts binary operands from the 'children' array and applies the given operator by calling the 'BinaryOperation' function
-	template<typename P, typename iType> Result* Apply(Result* (iType::*operation) (P) )
+	Result* Evaluate()
 	{
 		assert(children.size() == 2);		// Assert binary node has valid children count
 
@@ -70,136 +80,9 @@ private:
 	{
 		return (lhs->*op)(rhs);
 	}
-};
-
-template<class P, class iType>
-class BinaryNodeSpecific : public BinaryNode
-{
-public:
-	// BinaryNodeSpecific() {}
-	// BinaryNodeSpecific(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
-	BinaryNodeSpecific(AstNode* lhs, AstNode* rhs, Result* (iType::*_operation)(P)) : BinaryNode(lhs, rhs), operation(_operation) {}
-
-	virtual Result* Evaluate() 
-	{
-		return BinaryNode::Apply(operation);
-	}
 
 	Result* (iType::*operation)(P);
 };
-
-class AdditionNode : public BinaryNode
-{
-public:
-	AdditionNode() {}
-	AdditionNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
-
-	virtual Result* Evaluate();
-};
-
-class SubtractionNode : public BinaryNode
-{
-public:
-	SubtractionNode() {}
-	SubtractionNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
-
-	virtual Result* Evaluate();
-
-};
-
-class MultiplicationNode : public BinaryNode
-{
-public:
-	MultiplicationNode() {}
-	MultiplicationNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
-
-	virtual Result* Evaluate();
-
-};
-
-class DivisionNode : public BinaryNode
-{
-public:
-	DivisionNode() {}
-	DivisionNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
-
-	virtual Result* Evaluate();
-
-};
-
-class LessComparisonNode : public BinaryNode
-{
-public:
-	LessComparisonNode() {}
-	LessComparisonNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
-
-	virtual Result* Evaluate();
-};
-
-class GreaterComparisonNode : public BinaryNode
-{
-public:
-	GreaterComparisonNode() {}
-	GreaterComparisonNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
-
-	virtual Result* Evaluate();
-};
-
-class LessThanComparisonNode : public BinaryNode
-{
-public:
-	LessThanComparisonNode() {}
-	LessThanComparisonNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
-
-	virtual Result* Evaluate();
-};
-
-
-class GreaterThanComparisonNode : public BinaryNode
-{
-public:
-	GreaterThanComparisonNode() {}
-	GreaterThanComparisonNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
-
-	virtual Result* Evaluate();
-};
-
-class ANDComparisonNode : public BinaryNode
-{
-public:
-	ANDComparisonNode() {}
-	ANDComparisonNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
-
-	virtual Result* Evaluate();
-};
-
-class ORComparisonNode : public BinaryNode
-{
-public:
-	ORComparisonNode() {}
-	ORComparisonNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
-
-	virtual Result* Evaluate();
-};
-
-class EqualComparisonNode : public BinaryNode
-{
-public:
-	EqualComparisonNode() {}
-	EqualComparisonNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
-
-	virtual Result* Evaluate();
-};
-
-class NotEqualComparisonNode : public BinaryNode
-{
-public:
-	NotEqualComparisonNode() {}
-	NotEqualComparisonNode(AstNode* lhs, AstNode* rhs) : BinaryNode(lhs, rhs) {}
-
-	virtual Result* Evaluate();
-};
-
 
 class NegationNode : public AstNode 
 {
@@ -238,11 +121,11 @@ private:
 	std::string name;				// identifier name
 };
 
-class AssignmentNode : public BinaryNode
+class AssignmentNode : public AstNode
 {
 public:
 	AssignmentNode() {}
-	AssignmentNode(AstNode* identifierNode, AstNode* expression) : BinaryNode(identifierNode, expression) {}
+	AssignmentNode(AstNode* identifierNode, AstNode* expression) { AddChild(identifierNode); AddChild(expression); } //BinaryNode(identifierNode, expression) {}
 
 	virtual Result* Evaluate();
 };

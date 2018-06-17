@@ -37,35 +37,20 @@ AstNode::~AstNode()
 }
 
 // TODO: Delete this function
-std::pair<Result*, Result*> BinaryNode::GetBinaryOperands()
-{
-	assert(children.size() == 2);
-	assert(children[0] != nullptr && children[1] != nullptr);
+// std::pair<Result*, Result*> BinaryNode::GetBinaryOperands()
+// {
+// 	assert(children.size() == 2);
+// 	assert(children[0] != nullptr && children[1] != nullptr);
 
-	Result *lhs = children[0]->Evaluate(),
-		   *rhs = children[1]->Evaluate();
+// 	Result *lhs = children[0]->Evaluate(),
+// 		   *rhs = children[1]->Evaluate();
 
-	return std::make_pair(lhs, rhs);
-}
-
-Result* AdditionNode::Evaluate()
-{	
-	return BinaryNode::Apply(&Operable::operator+);
-}
-
-Result* SubtractionNode::Evaluate()
-{
-	return BinaryNode::Apply(&Operable::operator-);
-}
+// 	return std::make_pair(lhs, rhs);
+// }
 
 Result* LiteralNode::Evaluate()
 {	
 	return datum;
-}
-
-Result * MultiplicationNode::Evaluate()
-{	
-	return BinaryNode::Apply(&Operable::operator*);	
 }
 
 Result * IdentifierNode::Evaluate()
@@ -108,62 +93,21 @@ Result* ArrayNode::Evaluate()
 	return res;
 }
 
-Result * DivisionNode::Evaluate()
-{
-	return BinaryNode::Apply(&Operable::operator/);	
-}
-
-Result* LessComparisonNode::Evaluate()
-{
-	return BinaryNode::Apply(&Comparable::operator<);	
-}
-
-Result* GreaterComparisonNode::Evaluate()
-{
-	return BinaryNode::Apply(&Comparable::operator>);
-}
-
-Result* LessThanComparisonNode::Evaluate()
-{
-	return BinaryNode::Apply(&Comparable::operator<=);
-}
-
-Result* GreaterThanComparisonNode::Evaluate()
-{
-	return BinaryNode::Apply(&Comparable::operator>=);
-}
-
-Result* ANDComparisonNode::Evaluate()
-{
-	return BinaryNode::Apply(&LComparable::operator&&);
-}
-
-Result* ORComparisonNode::Evaluate()
-{
-	return BinaryNode::Apply(&LComparable::operator||);
-}
-
-Result* EqualComparisonNode::Evaluate()
-{
-	return BinaryNode::Apply(&Equitable::operator==);
-}
-
-Result* NotEqualComparisonNode::Evaluate()
-{
-	return BinaryNode::Apply(&Equitable::operator!=);
-}
-
 Result* AssignmentNode::Evaluate()
 {	
-	std::pair<Result*, Result*> operands = BinaryNode::GetBinaryOperands();
+	assert(children.size() == 2);
+	assert(children[0] != nullptr && children[1] != nullptr);
 
-	if (operands.first->IsSane() == false)
-		return AstNode::HandleError(static_cast<ErrorResult*>(operands.first));
+	Result *lhs = children[0]->Evaluate(),
+			*rhs = children[1]->Evaluate();
 
-	if(operands.second->IsSane() == false)
-		return AstNode::HandleError(static_cast<ErrorResult*>(operands.second));
+	if (lhs->IsSane() == false)
+		return AstNode::HandleError(static_cast<ErrorResult*>(lhs));
 
-	return operands.first->operator=(operands.second);
+	if(rhs->IsSane() == false)
+		return AstNode::HandleError(static_cast<ErrorResult*>(rhs));
+
+	return lhs->operator=(rhs);
 
 	// return BinaryNode::Apply<Result*, Result>(&Result::operator=);		This doesnt work since the function 'Apply' requires static ToString
 }

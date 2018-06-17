@@ -94,34 +94,33 @@ assignment:   IDENTIFIER ASSIGN expression	 		{$<val.node>$ = new AssignmentNode
 			;
 
 
-lcomparison:  lcomparison AND equation				{$<val.node>$ = new ANDComparisonNode($<val.node>1, $<val.node>3);}
-			| lcomparison OR equation				{$<val.node>$ = new ORComparisonNode($<val.node>1, $<val.node>3);}
+lcomparison:  lcomparison AND equation				{$<val.node>$ = new BinaryNode<const ValidResult*, LComparable>($<val.node>1, $<val.node>3, &LComparable::operator&&);}
+			| lcomparison OR equation				{$<val.node>$ = new BinaryNode<const ValidResult*, LComparable>($<val.node>1, $<val.node>3, &LComparable::operator||);}
 			| equation								{$<val.node>$ = $<val.node>1;}
 			;	
 
-equation:	  comparison DEQUALS comparison			{$<val.node>$ = new EqualComparisonNode($<val.node>1, $<val.node>3);}
-			| comparison NEQUALS comparison			{$<val.node>$ = new NotEqualComparisonNode($<val.node>1, $<val.node>3);}
+equation:	  comparison DEQUALS comparison			{$<val.node>$ = new BinaryNode<const ValidResult*, Equitable>($<val.node>1, $<val.node>3, &Equitable::operator==);}
+			| comparison NEQUALS comparison			{$<val.node>$ = new BinaryNode<const ValidResult*, Equitable>($<val.node>1, $<val.node>3, &Equitable::operator!=);}
 			| comparison							{$<val.node>$ = $<val.node>1;}
 			;
 
-comparison:   num_expr LESS num_expr				{$<val.node>$ = new LessComparisonNode($<val.node>1, $<val.node>3);}
-			| num_expr GREATER num_expr				{$<val.node>$ = new GreaterComparisonNode($<val.node>1, $<val.node>3);}
-			| num_expr LESS_THAN num_expr			{$<val.node>$ = new LessThanComparisonNode($<val.node>1, $<val.node>3);}
-			| num_expr GREATER_THAN num_expr		{$<val.node>$ = new GreaterThanComparisonNode($<val.node>1, $<val.node>3);}
+comparison:   num_expr LESS num_expr				{$<val.node>$ = new BinaryNode<const ValidResult*, Comparable>($<val.node>1, $<val.node>3, &Comparable::operator<);}
+			| num_expr GREATER num_expr				{$<val.node>$ = new BinaryNode<const ValidResult*, Comparable>($<val.node>1, $<val.node>3, &Comparable::operator>);}
+			| num_expr LESS_THAN num_expr			{$<val.node>$ = new BinaryNode<const ValidResult*, Comparable>($<val.node>1, $<val.node>3, &Comparable::operator<=);}
+			| num_expr GREATER_THAN num_expr		{$<val.node>$ = new BinaryNode<const ValidResult*, Comparable>($<val.node>1, $<val.node>3, &Comparable::operator>=);}
 			| num_expr								{$<val.node>$ = $<val.node>1;}
 			;
 
 num_expr:     addition						{$<val.node>$ = $<val.node>1;}
 			;
 
-// addition: 	  addition '+' multipl			{$<val.node>$ = new AdditionNode($<val.node>1, $<val.node>3);}
-addition: 	  addition '+' multipl			{$<val.node>$ = new BinaryNodeSpecific<const ValidResult*, Operable>($<val.node>1, $<val.node>3, &Operable::operator+);}
-			| addition '-' multipl			{$<val.node>$ = new SubtractionNode($<val.node>1, $<val.node>3);}
+addition: 	  addition '+' multipl			{$<val.node>$ = new BinaryNode<const ValidResult*, Operable>($<val.node>1, $<val.node>3, &Operable::operator+);}
+			| addition '-' multipl			{$<val.node>$ = new BinaryNode<const ValidResult*, Operable>($<val.node>1, $<val.node>3, &Operable::operator-);}
 			| multipl						{$<val.node>$ = $<val.node>1;}
 			;
 
-multipl: 	  multipl '*' unary				{$<val.node>$ = new MultiplicationNode($<val.node>1, $<val.node>3);}
-		 	| multipl '/' unary				{$<val.node>$ = new DivisionNode($<val.node>1, $<val.node>3);}
+multipl: 	  multipl '*' unary				{$<val.node>$ = new BinaryNode<const ValidResult*, Operable>($<val.node>1, $<val.node>3, &Operable::operator*);}
+		 	| multipl '/' unary				{$<val.node>$ = new BinaryNode<const ValidResult*, Operable>($<val.node>1, $<val.node>3, &Operable::operator/);}
  			| unary							{$<val.node>$ = $<val.node>1;}
  			;	
 
